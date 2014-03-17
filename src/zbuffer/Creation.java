@@ -282,6 +282,7 @@ public final class Creation implements GLEventListener {
                 //int color = (int)(Creation._pixels.get(x+Creation._width*y)*255);
                 // Reechantillonage
                 int color = (int)(tab[x+Creation._width*y]*255);
+                
                 if(this._sens == 0) color = 255 - color;
                 int rgb = new Color(color,color,color).getRGB();
                 bi.setRGB(x, y, rgb);
@@ -293,7 +294,7 @@ public final class Creation implements GLEventListener {
         try {
             
             ImageIO.write(bi, "PNG", new File(this._path));
-            System.out.println("Image enregistree !");
+            System.out.println("Image " + this._path + " enregistree !");
             
         } catch (IOException ex) {
             Logger.getLogger(Creation.class.getName()).log(Level.SEVERE, null, ex);

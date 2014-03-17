@@ -7,6 +7,7 @@
 package sphere;
 
 import zbuffer.Creation;
+import zbuffer.Lecture;
 
 /**
  * Sphere
@@ -21,6 +22,10 @@ public class Sphere {
     public static void main(String[] args) {
         
         Creation scene = new Creation("zbuffer.png",0);
+        Lecture zbuffer = new Lecture("zbuffer.png");
+        
+        float[][] pixels = zbuffer.lireImage();
+        //zbuffer.affichage(pixels,"zbuffer_test.png");
         
     } // main(String[] args)
     
