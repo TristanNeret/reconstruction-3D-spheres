@@ -6,8 +6,13 @@
 
 package window.view;
 
-import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.GLBuffers;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2ES1;
@@ -33,15 +38,27 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
     
     
     private float[][] _pixels;
+    private ArrayList<GLUquadric> _spheres;
+    private ArrayList<GLUquadric> _spheresMem;
+    private float _distanceMem;
     private int _nbSpheres;
+    private Random _rand;
+    private boolean _test;
     
     // Parametres generaux
     static int _width;
     static int _height;
     private float _rotateT = 0.0f;
     
+    // z-buffer
+    protected String _path; // Nom de l'image de profondeur
+    protected int _sens;    // 1 pour noir-blanc et 0 pour blanc-noir
+    static int _frameBufferID[];
+    static int _depthBufferID[];
+    static private FloatBuffer _pixelsBis;
+    
     // JOGL
-    protected final Animator _animator;
+    protected final FPSAnimator _FPSAnimator;
     protected GL2 _gl;
     
     /** The GL unit (helper class) **/
@@ -57,15 +74,19 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
         
         // Nombre de spheres a representer
         this._nbSpheres = nbSpheres;
+        this._rand = new Random();
+        this._test = true;
         
+        // Recuperation des donnees du z-buffer
         Lecture lecture = new Lecture(path);
         this._pixels = lecture.lireImage();
         
+        // Mise a jour de la largeur et de la hauteur du rendu final
         _width = this._pixels.length;
         _height = this._pixels[0].length;
         
         // Preparation de JOGL
-        this._animator = new Animator(this);
+        this._FPSAnimator = new FPSAnimator(this, 5); 
         this.addGLEventListener(this);
         
         // Create GLU.
@@ -89,7 +110,7 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
      */
     public void afficher() {
         
-        this._animator.start();
+        this._FPSAnimator.start();
         this.requestFocus();
         
     } // afficher()
@@ -145,39 +166,63 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
         this._gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
         this._gl.glLoadIdentity();
         this._gl.glTranslatef(0.0f, 0.0f, -5.0f);
-        
+    
         // Gestion de l'eclairage
         this.setLight();
         
         // rotate on the three axis
-        this._gl.glRotatef(this._rotateT, 1.0f, 0.0f, 0.0f);
-        this._gl.glRotatef(this._rotateT, 0.0f, 1.0f, 0.0f);
-        this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);
+        float rotate_x = this._rand.nextFloat();
+        float rotate_y = this._rand.nextFloat();
+        float rotate_z = this._rand.nextFloat();
+        this._gl.glRotatef(this._rotateT, rotate_x, rotate_y, rotate_z);
+        //this._gl.glRotatef(this._rotateT, 0.0f, 1.0f, 0.0f);
+        //this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);
         
         // Draw sphere 
-        for(int i=0;i<this._nbSpheres;i++) {
+        float v_x, v_y, v_z;
+        for(int i=0;i<this._spheres.size();i++) {
       
-            GLUquadric qobj1 = _glu.gluNewQuadric();
+            GLUquadric qobj1 = this._spheres.get(i);
             this._gl.glPushMatrix();
             this._gl.glColor3f(1, 1, 1);
-            this._gl.glTranslatef(2.5f, 2.5f, -5.f);
+            
+            v_x = this._rand.nextInt(6)-3;
+            v_y = this._rand.nextInt(6)-3;
+            v_z = this._rand.nextInt(6)-3;
+            this._gl.glTranslatef(v_x, v_y, v_z);
+            
             _glu.gluSphere(qobj1, 1.f, 100, 100);
             this._gl.glPopMatrix();
         
         }
-        
-        /*GLUquadric qobj1 = _glu.gluNewQuadric();
-    	this._gl.glPushMatrix();
-        this._gl.glColor3f(1, 1, 1);
-        this._gl.glTranslatef(2.5f, 2.5f, -5.f);
-    	_glu.gluSphere(qobj1, 1.f, 100, 100);
-    	this._gl.glPopMatrix();*/
 
         // Done Drawing 
         this._gl.glEnd();                                             
 
         // increasing rotation for the next iteration                   
         this._rotateT += 0.2f; 
+        
+        // Affichage de la distance euclidienne
+        float[][] distance = null;
+        if(_test) { 
+            
+            distance = this.creationZBuffer(gLDrawable);
+            float res = this.getDistanceEuclidienne(distance);
+            
+            // Memorisation du meilleur resultat
+            if(res < this._distanceMem) {
+                
+                this._distanceMem = res;
+                this._spheresMem = this._spheres;
+                System.out.println("Distance euclidienne: " + this.getDistanceEuclidienne(distance));
+                
+            }
+            
+        } else {
+            
+            this._test = !this._test;
+            
+        }
        
     } // display(GLAutoDrawable glad)
 
@@ -193,12 +238,32 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
         this._gl.glDepthFunc(GL.GL_LEQUAL);
         this._gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
         
+        // Creation des spheres
+        this._spheres = new ArrayList<GLUquadric>();
+
+        for(int i=0;i<this._nbSpheres;i++) {
+      
+            GLUquadric qobj1 = _glu.gluNewQuadric();
+            this._gl.glPushMatrix();
+            this._gl.glColor3f(1, 1, 1);
+            this._gl.glTranslatef(0.f, 0.f, 0.f);
+            _glu.gluSphere(qobj1, 1.f, 100, 100);
+            this._gl.glPopMatrix();
+            this._spheres.add(qobj1);
+        
+        }
+        this._spheresMem = this._spheres;
+        this._distanceMem = Float.POSITIVE_INFINITY;
+        
+        // Initialize FBO3
+        initializeFBO3(this._gl);
+        
     } // init(GLAutoDrawable glad)
     
     
     @Override
     public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
-        
+
         this._gl = gLDrawable.getGL().getGL2();
         final float aspect = (float) width / (float) height;
         this._gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
@@ -216,6 +281,178 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
     public void dispose(GLAutoDrawable gLDrawable) {
        
     } // dispose(GLAutoDrawable glad)
+    
+    
+    ///////////////////////////// Z-BUFFER //////////////////////////////
+    
+    
+    /**
+     * Prepare el tableau de z-buffer
+     * @param gl 
+     */
+    static private void initializeFBO3(GL2 gl) {
+
+	// Create frame buffer
+        _frameBufferID = new int[1];
+	gl.glGenFramebuffers(1, _frameBufferID, 0);
+	gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, _frameBufferID[0]);
+	
+	// ------------- Depth buffer texture --------------
+	_depthBufferID = new int[1];
+	gl.glGenTextures(1,_depthBufferID,0);
+	gl.glBindTexture(GL2.GL_TEXTURE_2D, _depthBufferID[0]);
+	
+	gl.glTexImage2D(GL2.GL_TEXTURE_2D,          // target texture type
+			0,                          // mipmap LOD level
+			GL2.GL_DEPTH_COMPONENT24,   // internal pixel format
+			//GL2.GL_DEPTH_COMPONENT
+			_width/1,           // width of generated image
+			_height/1,          // height of generated image
+			0,                          // border of image
+			GL2.GL_DEPTH_COMPONENT,     // external pixel format 
+			GL2.GL_FLOAT,        // datatype for each value
+			null);  // buffer to store the texture in memory
+	
+	// Some parameters
+	gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
+	gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
+	gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_CLAMP_TO_EDGE);
+	gl.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_CLAMP_TO_EDGE);     
+	
+	// Attach 2D texture to this FBO
+	gl.glFramebufferTexture2D(GL2.GL_FRAMEBUFFER,
+				  GL2.GL_DEPTH_ATTACHMENT,
+				  GL2.GL_TEXTURE_2D,
+				  _depthBufferID[0],0);
+	
+	gl.glBindTexture(GL2.GL_TEXTURE_2D, 0);
+	
+	// Disable color buffer
+	gl.glDrawBuffer(GL2.GL_NONE);
+	gl.glReadBuffer(GL2.GL_NONE);
+	
+	// Set pixels ((width*2)* (height*2))
+	// It has to have twice the size of shadowmap size
+	_pixelsBis = GLBuffers.newDirectFloatBuffer(_width/1*_height/1);
+	
+	// Set default frame buffer before doing the check
+	gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
+	
+	int status = gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER);
+	
+	// Always check that our framebuffer is ok
+	if(gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER) != GL2.GL_FRAMEBUFFER_COMPLETE) {
+            
+		System.err.println("Can not use FBO! Status error:" + status);
+                
+	} 
+    
+    } // initializeFBO3(GL2 gl)
+    
+    
+    /**
+     * Permet de reechantilloner les valeurs de z-buffer
+     * @return le tableau echantillonne de z-buffer
+     */
+    public float[] reechantillonner() {
+        
+        float[] tab = new float[_width*_height];
+        for(int i=0;i<_width*_height;i++) {
+            tab[i] = 1;
+        }
+        float min = (float)_pixelsBis.get(0);
+        float max = (float)_pixelsBis.get(0);
+        for(int i=0;i<_width;i++) {
+            
+            for(int j=0;j<_height;j++) {
+                
+                if(_pixelsBis.get(i+j*_width) < min) min = (float)_pixelsBis.get(i+j*_width);
+                if(_pixelsBis.get(i+j*_width) > max) max = (float)_pixelsBis.get(i+j*_width);
+                
+            }
+            
+        }
+        
+        // Remplissage du tableau echantillonne
+        for(int i=0;i<_width;i++) {
+            
+            for(int j=0;j<_height;j++) {
+                
+                //tab[i+j*_width] = (255*(_pixels.get(i+j*_width)-min)/(max-min))/255;
+                tab[i+j*_width] = (255*(_pixelsBis.get(i+j*_width)-min)/(max-min))/255;
+                
+            }
+        }
+        
+        return tab;
+        
+    } // reechantillonner()
+    
+    
+    /**
+     * Dessine l'image de profondeur de l'image
+     * @param gLDrawable 
+     * @return le tableau de profondeur de l'image
+     */
+    public float[][] creationZBuffer(GLAutoDrawable gLDrawable) {
+        
+        this._test = !this._test;
+        
+        //Render scene into (own, special) Frame buffer first
+        this._gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, _frameBufferID[0]);
+        display(gLDrawable);
+
+        //Read pixels (i.e., a ByteBuffer) from buffer
+        this._gl.glBindFramebuffer(GL2.GL_READ_FRAMEBUFFER, _frameBufferID[0]);
+        
+        //Read pixels 
+        this._gl.glReadPixels(0, 0, _width/1, _height/1, GL2.GL_DEPTH_COMPONENT , GL2.GL_FLOAT,
+                        _pixelsBis);
+
+        float[] tab;
+        float[][] res = new float[_width][_height];
+        tab = this.reechantillonner();
+        for (int x=0; x<_width/1; x++) {
+            for (int y=0; y<_height/1; y++) {
+                
+                // Pas de reechantillonnage
+                //int color = (int)(_pixelsBis.get(x+_width*y)*255);
+                // Reechantillonage
+                int color = (int)(tab[x+_width*(_height-1-y)]*255);
+                
+                if(this._sens == 0) color = 255 - color;
+                res[x][y] = color/255;
+                
+            }
+        }
+        
+        return res;
+        
+    } // dessinerCreation(GLAutoDrawable gLDrawable) 
+    
+    
+    /**
+     * Permet de connaitre la distance euclidienne entre les deux images
+     * @param bis tableau de pixels a comparer
+     * @return la disatance euclidienne entre les deux images
+     */
+    protected float getDistanceEuclidienne(float[][] bis) {
+        
+        float distance, dTmp;
+        distance = dTmp = 0;
+        
+        for(int i=0;i<_width;i++) {
+            for(int j=0;j<_height;j++) {
+                
+                dTmp = (float) Math.sqrt(Math.pow(this._pixels[i][j], 2)+Math.pow(bis[i][j], 2));
+                distance += dTmp;
+                
+            }
+        }
+        
+        return distance;
+        
+    } // getDistanceEuclidienne(float[][] bis)
     
     
 } // class VueSpheres

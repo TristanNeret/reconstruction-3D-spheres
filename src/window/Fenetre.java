@@ -28,7 +28,7 @@ public class Fenetre extends JFrame {
     private final VueZBuffer vz;
     private final VueSpheres vs;
     
-    private int _nbSpheres = 3;
+    private int _nbSpheres = 2;
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
