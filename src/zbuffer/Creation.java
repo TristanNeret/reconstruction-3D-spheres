@@ -330,12 +330,18 @@ public final class Creation implements GLEventListener {
         this._gl.glRotatef(this._rotateT, 0.0f, 1.0f, 0.0f);
         this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);
         
-        // Draw a sphere 
+        // Draw sphere 
         GLUquadric qobj0 = Creation._glu.gluNewQuadric();
     	this._gl.glPushMatrix();
         this._gl.glColor3f(1, 1, 1);
-    	Creation._glu.gluSphere(qobj0, 1.5f, 100, 100);
-        //Creation._glu.gluCylinder(qobj0, 2.0, 1.0, 5, 50, 50);
+    	Creation._glu.gluSphere(qobj0, 1.f, 100, 100);
+    	this._gl.glPopMatrix();
+        
+        GLUquadric qobj1 = Creation._glu.gluNewQuadric();
+    	this._gl.glPushMatrix();
+        this._gl.glColor3f(1, 1, 1);
+        this._gl.glTranslatef(2.5f, 2.5f, -5.f);
+    	Creation._glu.gluSphere(qobj1, 1.f, 100, 100);
     	this._gl.glPopMatrix();
 
         // Done Drawing 
