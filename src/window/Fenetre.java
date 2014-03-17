@@ -28,6 +28,8 @@ public class Fenetre extends JFrame {
     private final VueZBuffer vz;
     private final VueSpheres vs;
     
+    private int _nbSpheres = 3;
+    
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     /////////////////////////// CONSTRUCTEUR //////////////////////////////////
@@ -42,7 +44,7 @@ public class Fenetre extends JFrame {
         vz = new VueZBuffer(path);
         //this.add(vz,BorderLayout.WEST);
         
-        vs = new VueSpheres(path);
+        vs = new VueSpheres(path,this._nbSpheres);
         //this.add(vs,BorderLayout.EAST);
                      
         // Split entre les vues

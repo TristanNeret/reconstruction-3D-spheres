@@ -7,6 +7,7 @@
 package sphere;
 
 import window.Fenetre;
+import zbuffer.Creation;
 import zbuffer.Lecture;
 
 /**

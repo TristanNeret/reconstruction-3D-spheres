@@ -32,7 +32,8 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
     //////////////////////////////////////////////////////////////////////////
     
     
-    float[][] _pixels;
+    private float[][] _pixels;
+    private int _nbSpheres;
     
     // Parametres generaux
     static int _width;
@@ -52,7 +53,10 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueSpheres(String path) {
+    public VueSpheres(String path, int nbSpheres) {
+        
+        // Nombre de spheres a representer
+        this._nbSpheres = nbSpheres;
         
         Lecture lecture = new Lecture(path);
         this._pixels = lecture.lireImage();
@@ -151,18 +155,23 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
         this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);
         
         // Draw sphere 
-        GLUquadric qobj0 = _glu.gluNewQuadric();
-    	this._gl.glPushMatrix();
-        this._gl.glColor3f(1, 1, 1);
-    	_glu.gluSphere(qobj0, 1.f, 100, 100);
-    	this._gl.glPopMatrix();
+        for(int i=0;i<this._nbSpheres;i++) {
+      
+            GLUquadric qobj1 = _glu.gluNewQuadric();
+            this._gl.glPushMatrix();
+            this._gl.glColor3f(1, 1, 1);
+            this._gl.glTranslatef(2.5f, 2.5f, -5.f);
+            _glu.gluSphere(qobj1, 1.f, 100, 100);
+            this._gl.glPopMatrix();
         
-        GLUquadric qobj1 = _glu.gluNewQuadric();
+        }
+        
+        /*GLUquadric qobj1 = _glu.gluNewQuadric();
     	this._gl.glPushMatrix();
         this._gl.glColor3f(1, 1, 1);
         this._gl.glTranslatef(2.5f, 2.5f, -5.f);
     	_glu.gluSphere(qobj1, 1.f, 100, 100);
-    	this._gl.glPopMatrix();
+    	this._gl.glPopMatrix();*/
 
         // Done Drawing 
         this._gl.glEnd();                                             

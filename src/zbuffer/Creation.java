@@ -36,7 +36,7 @@ public final class Creation implements GLEventListener {
     
     // Parametres generaux
     static int _width = 500;
-    static int _height = 500;
+    static int _height = 400;
     private float _rotateT = 0.0f;
     private boolean _test = true;
     
@@ -243,6 +243,7 @@ public final class Creation implements GLEventListener {
             
             for(int j=0;j<Creation._height;j++) {
                 
+                //tab[i+j*Creation._width] = (255*(Creation._pixels.get(i+j*Creation._width)-min)/(max-min))/255;
                 tab[i+j*Creation._width] = (255*(Creation._pixels.get(i+j*Creation._width)-min)/(max-min))/255;
                 
             }
@@ -281,7 +282,8 @@ public final class Creation implements GLEventListener {
                 // Pas de reechantillonnage
                 //int color = (int)(Creation._pixels.get(x+Creation._width*y)*255);
                 // Reechantillonage
-                int color = (int)(tab[x+Creation._width*y]*255);
+                //int color = (int)(tab[x+Creation._width*y]*255);
+                int color = (int)(tab[x+Creation._width*(Creation._height-1-y)]*255);
                 
                 if(this._sens == 0) color = 255 - color;
                 int rgb = new Color(color,color,color).getRGB();
