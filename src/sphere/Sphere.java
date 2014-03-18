@@ -6,9 +6,10 @@
 
 package sphere;
 
+import sphere.zbuffer.Lecture;
+import sphere.zbuffer.Creation;
 import window.Fenetre;
-import zbuffer.Creation;
-import zbuffer.Lecture;
+import window.view.AbstractVueGLCanvas;
 
 /**
  * Sphere
@@ -23,11 +24,12 @@ public class Sphere {
     public static void main(String[] args) {
         
         // Permet de creer une image de profondeur
-        //Creation scene = new Creation("zbuffer.png",0);
+        //AbstractVueGLCanvas scene = new Creation("zbuffer.png",0,200,200);
         
         // Permet de recuperer le tableau de pixels d'une image de profondeur
         //Lecture zbuffer = new Lecture("zbuffer.png");
         //float[][] pixels = zbuffer.lireImage();
+        //zbuffer.affichage(pixels, "zbuffer_test.png");
         
         // Affichage de la fenetre
         Fenetre app = new Fenetre("zbuffer.png");

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package zbuffer;
+package sphere.zbuffer;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

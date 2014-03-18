@@ -8,9 +8,11 @@ package window;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import window.main.MainSphere;
+import window.view.AbstractVueGLCanvas;
 import window.view.VueFinale;
 import window.view.VueSpheres;
 import window.view.VueZBuffer;
@@ -27,12 +29,12 @@ public class Fenetre extends JFrame {
     //////////////////////////////////////////////////////////////////////////
     
     
-    private MainSphere _ms;
+    private final MainSphere _ms;
     private final VueZBuffer vz;
-    private final VueSpheres vs;
-    private final VueFinale vf;
+    private final AbstractVueGLCanvas vs;
+    private final AbstractVueGLCanvas vf;
     
-    private int _nbSpheres = 2;
+    private final int _nbSpheres = 2;
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -51,12 +53,12 @@ public class Fenetre extends JFrame {
         this._ms.addObserver(vz);
         //this.add(vz,BorderLayout.WEST);
         
-        vs = new VueSpheres(path,this._nbSpheres,this._ms);
-        this._ms.addObserver(vs);
+        vs = new VueSpheres(this._ms,path,this._nbSpheres);
+        this._ms.addObserver((Observer) vs);
         //this.add(vs,BorderLayout.EAST);
         
-        vf = new VueFinale(path,this._ms);
-        this._ms.addObserver(vf);
+        vf = new VueFinale(this._ms,path);
+        this._ms.addObserver((Observer) vf);
         this.add(vf,BorderLayout.SOUTH);
                      
         // Split entre les vues

@@ -1,4 +1,4 @@
-package sphere3d;
+package test;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.GLBuffers;

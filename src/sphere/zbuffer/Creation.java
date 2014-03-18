@@ -4,68 +4,54 @@
  * and open the template in the editor.
  */
 
-package window.view;
+package sphere.zbuffer;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2ES1;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
-import javax.media.opengl.fixedfunc.GLMatrixFunc;
+import java.awt.Frame;
+import javax.media.opengl.*;
+import javax.media.opengl.fixedfunc.*;
 import javax.media.opengl.glu.GLUquadric;
-import window.main.MainSphere;
-import sphere.zbuffer.Lecture;
+import window.view.AbstractVueGLCanvas;
 
 /**
- * VueFinale
+ * Creation
  * @author Tristan
  */
-public class VueFinale extends AbstractVueGLCanvas implements Observer {
+public final class Creation extends AbstractVueGLCanvas implements GLEventListener {
     
-    
-    //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    ///////////////////////////// VARIABLES ///////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////
-
-    
-    protected MainSphere _ms;
-
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     //////////////////////////// CONSTRUCTEUR /////////////////////////////////
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueFinale(MainSphere ms, String path) {
+    public Creation(String path, int sens, int width, int height) {
         
-        this._ms = ms;
+        this._path = path;
+        this._sens = sens;
+        this._width = width;
+        this._height = height;
         
-        // Recuperation des donnees du z-buffer
-        Lecture lecture = new Lecture(path);
-        this._pixels = lecture.lireImage();
+        // Permet d'afficher l'image
+        Frame frame = new Frame("JOGL");
+        frame.add(this);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setSize(new Dimension(width,height));
+        frame.setVisible(true);
         
-        // Mise a jour de la largeur et de la hauteur du rendu final
-        this._width = this._pixels.length;
-        this._height = this._pixels[0].length;
-
-        // Dimension de la fenetre
-        this.setPreferredSize(new Dimension(this._width, this._height));
-        
-    } // VueFinale()
+    } // Creation(String path, int sens, int width, int height)
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     ///////////////////////////// FONCTIONS ///////////////////////////////////
     //////////////////////////////////////////////////////////////////////////
     
-
+    
     ///////////////////////////// OPEN-GL ///////////////////////////////
     
     
-    @Override
+     @Override
     public void init(GLAutoDrawable glDrawable) {
         
         this._gl = glDrawable.getGL().getGL2();
@@ -76,59 +62,62 @@ public class VueFinale extends AbstractVueGLCanvas implements Observer {
         this._gl.glDepthFunc(GL.GL_LEQUAL);
         this._gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
         
-        // Creation des spheres
-        this._spheres = new ArrayList<>();
-
-        for(int i=0;i<this._spheres.size();i++) {
-      
-            GLUquadric qobj1 = _glu.gluNewQuadric();
-            this._gl.glPushMatrix();
-            this._gl.glColor3f(1, 1, 1);
-            this._gl.glTranslatef(0.f, 0.f, 0.f);
-            _glu.gluSphere(qobj1, 1.f, 100, 100);
-            this._gl.glPopMatrix();
-            this._spheres.add(qobj1);
-        
-        }
+        // Preparation du z-buffer
+        this.initializeZBuffer(this._gl);
         
     } // init(GLAutoDrawable glad)
     
-
+    
     @Override
     public void display(GLAutoDrawable gLDrawable) {
-     
+        
         this._gl = gLDrawable.getGL().getGL2();
         this._gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         this._gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
         this._gl.glLoadIdentity();
         this._gl.glTranslatef(0.0f, 0.0f, -5.0f);
-    
+        
         // Gestion de l'eclairage
         this.setLight();
         
+        // rotate on the three axis
+        this._gl.glRotatef(this._rotateT, 1.0f, 0.0f, 0.0f);
+        this._gl.glRotatef(this._rotateT, 0.0f, 1.0f, 0.0f);
+        this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);
+
         // Draw sphere 
-        for(int i=0;i<this._spheres.size();i+=3) {
-      
-            GLUquadric qobj1 = this._spheres.get(i);
-            this._gl.glPushMatrix();
-            this._gl.glTranslatef(this._translations.get(i), this._translations.get(i+1), this._translations.get(i+2));
-            _glu.gluSphere(qobj1, 1.f, 100, 100);
-            this._gl.glPopMatrix();
+        GLUquadric qobj0 = this._glu.gluNewQuadric();
+    	this._gl.glPushMatrix();
+        this._gl.glColor3f(1, 1, 1);
+    	this._glu.gluSphere(qobj0, 1.f, 100, 100);
+    	this._gl.glPopMatrix();
         
-        }
+        GLUquadric qobj1 = this._glu.gluNewQuadric();
+    	this._gl.glPushMatrix();
+        this._gl.glColor3f(1, 1, 1);
+        this._gl.glTranslatef(2.5f, 2.5f, -5.f);
+    	this._glu.gluSphere(qobj1, 1.f, 100, 100);
+    	this._gl.glPopMatrix();
 
         // Done Drawing 
         this._gl.glEnd();                                             
 
         // increasing rotation for the next iteration                   
         this._rotateT += 0.2f; 
+        
+        // Dessine l'image de z-buffer
+        if (this._test) {
+         
+            this.saveCreationZBufferPNG(gLDrawable);
+            
+        }
        
     } // display(GLAutoDrawable glad)
-    
+
     
     @Override
     public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
-
+        
         this._gl = gLDrawable.getGL().getGL2();
         final float aspect = (float) width / (float) height;
         this._gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
@@ -146,19 +135,6 @@ public class VueFinale extends AbstractVueGLCanvas implements Observer {
     public void dispose(GLAutoDrawable gLDrawable) {
        
     } // dispose(GLAutoDrawable glad)
-
-    
-    ///////////////////////////// OBSERVER //////////////////////////////
     
     
-    @Override
-    public void update(Observable o, Object arg) {
-        
-        this._spheres = this._ms.getSpheres();
-        this._translations = this._ms.getTranslations();
-        this.display();
-        
-    } // update(Observable o, Object arg)
-    
-    
-} // class VueFinale
+} // class Creation
