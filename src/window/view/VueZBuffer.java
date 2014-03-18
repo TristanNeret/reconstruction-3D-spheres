@@ -11,16 +11,19 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import window.main.MainSphere;
 
 /**
  * VueZBuffer
  * @author Tristan
  */
-public class VueZBuffer extends JPanel {
+public class VueZBuffer extends JPanel implements Observer {
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -28,6 +31,7 @@ public class VueZBuffer extends JPanel {
     //////////////////////////////////////////////////////////////////////////
     
     
+    protected MainSphere _ms;
     private BufferedImage _zbuffer;
     
     
@@ -36,8 +40,9 @@ public class VueZBuffer extends JPanel {
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueZBuffer(String path) {
+    public VueZBuffer(String path, MainSphere ms) {
         
+        this._ms = ms;
         try {
             
             this._zbuffer = ImageIO.read(new File(path));
@@ -64,6 +69,15 @@ public class VueZBuffer extends JPanel {
         g.drawImage(this._zbuffer, 0, 0, null);  
         
     } // paintComponent(Graphics g)
+
+    
+    ///////////////////////////// OBSERVER //////////////////////////////
+    
+    
+    @Override
+    public void update(Observable o, Object arg) {
+       
+    } // update(Observable o, Object arg)
     
     
 } // class VueZBuffer

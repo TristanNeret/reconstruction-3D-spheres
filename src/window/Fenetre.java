@@ -10,6 +10,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
+import window.main.MainSphere;
+import window.view.VueFinale;
 import window.view.VueSpheres;
 import window.view.VueZBuffer;
 
@@ -25,8 +27,10 @@ public class Fenetre extends JFrame {
     //////////////////////////////////////////////////////////////////////////
     
     
+    private MainSphere _ms;
     private final VueZBuffer vz;
     private final VueSpheres vs;
+    private final VueFinale vf;
     
     private int _nbSpheres = 2;
     
@@ -41,11 +45,19 @@ public class Fenetre extends JFrame {
         super("Reconstruction 3D à partir de sphères");
         this.setBackground(new Color(255,255,255));
         
-        vz = new VueZBuffer(path);
+        this._ms = new MainSphere();
+        
+        vz = new VueZBuffer(path,this._ms);
+        this._ms.addObserver(vz);
         //this.add(vz,BorderLayout.WEST);
         
-        vs = new VueSpheres(path,this._nbSpheres);
+        vs = new VueSpheres(path,this._nbSpheres,this._ms);
+        this._ms.addObserver(vs);
         //this.add(vs,BorderLayout.EAST);
+        
+        vf = new VueFinale(path,this._ms);
+        this._ms.addObserver(vf);
+        this.add(vf,BorderLayout.SOUTH);
                      
         // Split entre les vues
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,

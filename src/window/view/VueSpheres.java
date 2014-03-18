@@ -8,10 +8,11 @@ package window.view;
 
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.GLBuffers;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -23,13 +24,14 @@ import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
+import window.main.MainSphere;
 import zbuffer.Lecture;
 
 /**
  * VueSpheres
  * @author Tristan
  */
-public class VueSpheres extends GLCanvas implements GLEventListener {
+public class VueSpheres extends GLCanvas implements GLEventListener, Observer {
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -40,12 +42,15 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
     private float[][] _pixels;
     private ArrayList<GLUquadric> _spheres;
     private ArrayList<GLUquadric> _spheresMem;
+    private ArrayList<Float> _translations;
+    private ArrayList<Float> _translationsMem;
     private float _distanceMem;
     private int _nbSpheres;
     private Random _rand;
     private boolean _test;
     
     // Parametres generaux
+    protected MainSphere _ms;
     static int _width;
     static int _height;
     private float _rotateT = 0.0f;
@@ -70,10 +75,14 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueSpheres(String path, int nbSpheres) {
+    public VueSpheres(String path, int nbSpheres, MainSphere ms) {
+        
+        this._ms = ms;
         
         // Nombre de spheres a representer
         this._nbSpheres = nbSpheres;
+        this._translations = new ArrayList<Float>();
+        this._translationsMem = new ArrayList<Float>();
         this._rand = new Random();
         this._test = true;
         
@@ -86,7 +95,7 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
         _height = this._pixels[0].length;
         
         // Preparation de JOGL
-        this._FPSAnimator = new FPSAnimator(this, 5); 
+        this._FPSAnimator = new FPSAnimator(this, 10); 
         this.addGLEventListener(this);
         
         // Create GLU.
@@ -171,24 +180,26 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
         this.setLight();
         
         // rotate on the three axis
-        float rotate_x = this._rand.nextFloat();
-        float rotate_y = this._rand.nextFloat();
-        float rotate_z = this._rand.nextFloat();
+        float rotate_x = (float)this._rand.nextInt(101)/100;
+        float rotate_y = (float)this._rand.nextInt(101)/100;
+        float rotate_z = (float)this._rand.nextInt(101)/100;
         this._gl.glRotatef(this._rotateT, rotate_x, rotate_y, rotate_z);
-        //this._gl.glRotatef(this._rotateT, 0.0f, 1.0f, 0.0f);
-        //this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);
         
         // Draw sphere 
         float v_x, v_y, v_z;
+        v_x = v_y = v_z = 0;
+        this._translations = new ArrayList<Float>();
         for(int i=0;i<this._spheres.size();i++) {
       
             GLUquadric qobj1 = this._spheres.get(i);
             this._gl.glPushMatrix();
-            this._gl.glColor3f(1, 1, 1);
-            
-            v_x = this._rand.nextInt(6)-3;
-            v_y = this._rand.nextInt(6)-3;
-            v_z = this._rand.nextInt(6)-3;
+   
+            v_x = (((float)this._rand.nextInt(601)/100)-3);//*(this._rand.nextInt(61)/10);
+            v_y = (((float)this._rand.nextInt(601)/100)-3);//*(this._rand.nextInt(61)/10);
+            v_z = (((float)this._rand.nextInt(601)/100)-3);//*(this._rand.nextInt(61)/10);
+            this._translations.add(v_x);
+            this._translations.add(v_y);
+            this._translations.add(v_z);
             this._gl.glTranslatef(v_x, v_y, v_z);
             
             _glu.gluSphere(qobj1, 1.f, 100, 100);
@@ -214,6 +225,12 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
                 
                 this._distanceMem = res;
                 this._spheresMem = this._spheres;
+                this._translationsMem = this._translations;
+                
+                this._ms.setSpheres(this._spheres);
+                this._ms.setTranslations(this._translationsMem);
+                this._ms.updateView();
+                
                 System.out.println("Distance euclidienne: " + this.getDistanceEuclidienne(distance));
                 
             }
@@ -453,6 +470,15 @@ public class VueSpheres extends GLCanvas implements GLEventListener {
         return distance;
         
     } // getDistanceEuclidienne(float[][] bis)
+
+    
+    ///////////////////////////// OBSERVER //////////////////////////////
+    
+    
+    @Override
+    public void update(Observable o, Object arg) {
+       
+    } // update(Observable o, Object arg)
     
     
 } // class VueSpheres
