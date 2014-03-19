@@ -107,13 +107,15 @@ public class VueFinale extends AbstractVueGLCanvas implements Observer {
         this.setLight();
         
         // Draw sphere 
-        for(int i=0;i<this._spheres.size();i+=3) {
+        int s = 0;
+        for(int i=0;i<this._spheres.size()*3;i+=3) {
       
-            GLUquadric qobj1 = this._spheres.get(i);
+            GLUquadric qobj1 = this._spheres.get(s);
             this._gl.glPushMatrix();
             this._gl.glTranslatef(this._translations.get(i), this._translations.get(i+1), this._translations.get(i+2));
             _glu.gluSphere(qobj1, 1.f, 100, 100);
             this._gl.glPopMatrix();
+            s++;
         
         }
 

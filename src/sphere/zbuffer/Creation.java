@@ -80,10 +80,10 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
         // Gestion de l'eclairage
         this.setLight();
         
-        // rotate on the three axis
-        this._gl.glRotatef(this._rotateT, 1.0f, 0.0f, 0.0f);
+        // Rotate on the three axis
+        /*this._gl.glRotatef(this._rotateT, 1.0f, 0.0f, 0.0f);
         this._gl.glRotatef(this._rotateT, 0.0f, 1.0f, 0.0f);
-        this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);
+        this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);*/
 
         // Draw sphere 
         GLUquadric qobj0 = this._glu.gluNewQuadric();

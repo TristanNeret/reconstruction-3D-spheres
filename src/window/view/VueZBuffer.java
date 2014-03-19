@@ -40,7 +40,7 @@ public class VueZBuffer extends JPanel implements Observer {
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueZBuffer(String path, MainSphere ms) {
+    public VueZBuffer(MainSphere ms, String path) {
         
         this._ms = ms;
         try {

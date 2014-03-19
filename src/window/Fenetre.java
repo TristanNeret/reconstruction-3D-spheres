@@ -14,6 +14,7 @@ import javax.swing.JSplitPane;
 import window.main.MainSphere;
 import window.view.AbstractVueGLCanvas;
 import window.view.VueFinale;
+import window.view.VueInformations;
 import window.view.VueSpheres;
 import window.view.VueZBuffer;
 
@@ -31,6 +32,7 @@ public class Fenetre extends JFrame {
     
     private final MainSphere _ms;
     private final VueZBuffer vz;
+    private final VueInformations vi;
     private final AbstractVueGLCanvas vs;
     private final AbstractVueGLCanvas vf;
     
@@ -49,7 +51,7 @@ public class Fenetre extends JFrame {
         
         this._ms = new MainSphere();
         
-        vz = new VueZBuffer(path,this._ms);
+        vz = new VueZBuffer(this._ms,path);
         this._ms.addObserver(vz);
         //this.add(vz,BorderLayout.WEST);
         
@@ -59,13 +61,23 @@ public class Fenetre extends JFrame {
         
         vf = new VueFinale(this._ms,path);
         this._ms.addObserver((Observer) vf);
-        this.add(vf,BorderLayout.SOUTH);
+        //this.add(vf,BorderLayout.SOUTH);
+        
+        vi = new VueInformations(this._ms);
+        this._ms.addObserver((Observer) vi);
+        //this.add(vf,BorderLayout.SOUTH);
                      
         // Split entre les vues
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+        JSplitPane splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                                    this.vz, this.vs);
-        splitPane.setEnabled(false);
-        this.add(splitPane,BorderLayout.NORTH);
+        splitPane1.setEnabled(false);
+        JSplitPane splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+                                   this.vf, this.vi);
+        splitPane2.setEnabled(false);
+        JSplitPane splitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+                                   splitPane1, splitPane2);
+        splitPane3.setEnabled(false);
+        this.add(splitPane3,BorderLayout.NORTH);
         
         pack();
         this.setLocationRelativeTo(null);

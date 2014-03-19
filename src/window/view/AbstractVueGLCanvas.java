@@ -52,6 +52,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
     // Parametres generaux
     protected int _width;
     protected int _height;
+    protected int _nbIterations;
     protected float _rotateT;
     protected Fonction _fonction;
     
@@ -86,7 +87,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
         this._test = true;
         
         // Preparation de JOGL
-        this._FPSAnimator = new FPSAnimator(this, 10); 
+        this._FPSAnimator = new FPSAnimator(this, 30); 
         this.addGLEventListener(this);
     
         // Create GLU.
@@ -109,6 +110,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
      */
     public final void afficher() {
         
+        this._nbIterations = 0;
         this.requestFocus();
         
     } // afficher()
@@ -264,7 +266,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
      */
     protected float[][] getZBufferTab(GLAutoDrawable gLDrawable) {
         
-        this._test = !this._test;
+        this._test = false;
         
         //Render scene into (own, special) Frame buffer first
         this._gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, _frameBufferID[0]);
@@ -286,7 +288,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
                 // Pas de reechantillonnage
                 //int color = (int)(_pixelsBis.get(x+_width*y)*255);
                 // Reechantillonage
-                int color = (int)(tab[x+_width*(_height-1-y)]*255);
+                float color = (float)(tab[x+_width*(_height-1-y)]*255);
  
                 if(this._sens == 0) color = 255 - color;
                 res[x][y] = color/255;
@@ -339,7 +341,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
      */
     public void saveCreationZBufferPNG(GLAutoDrawable gLDrawable) {
         
-        this._test = !this._test;
+        this._test = false;
         
         //Render scene into (own, special) Frame buffer first
         this._gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, this._frameBufferID[0]);
@@ -374,6 +376,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
         // Sauveagrde de l'image
         try {
             
+            if(this._path == null) this._path = "creation_zbuffer.png";
             ImageIO.write(bi, "PNG", new File(this._path));
             System.out.println("Image " + this._path + " enregistree !");
             

@@ -24,6 +24,8 @@ public class MainSphere extends Observable {
     
     private ArrayList<GLUquadric> _spheres;
     private ArrayList<Float> _translations;
+    private String _diff;
+    private String _nbIterations;
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -39,6 +41,20 @@ public class MainSphere extends Observable {
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     ///////////////////////////// FONCTIONS ///////////////////////////////////
     //////////////////////////////////////////////////////////////////////////
+    
+    
+    /**
+     * Permet de mettre a jour les informations sur le derouement de 
+     * l'algorithme
+     * @param diff meilleur difference calculee entre les 2 z-buffer
+     * @param nbIterations nombre d'iterations pour y arriver
+     */
+    public void updateInformations(String diff, String nbIterations) {
+        
+        this._diff = diff;
+        this._nbIterations = nbIterations;
+        
+    } // updateInformations(String diff, String nbIterations)
     
     
     /**
@@ -69,6 +85,22 @@ public class MainSphere extends Observable {
 
     public void setTranslations(ArrayList<Float> _translations) {
         this._translations = _translations;
+    }
+
+    public String getDiff() {
+        return _diff;
+    }
+
+    public void setDiff(String _diff) {
+        this._diff = _diff;
+    }
+
+    public String getNbIterations() {
+        return _nbIterations;
+    }
+
+    public void setNbIterations(String _nbIterations) {
+        this._nbIterations = _nbIterations;
     }
     
     

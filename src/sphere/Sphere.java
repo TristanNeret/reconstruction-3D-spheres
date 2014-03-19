@@ -6,8 +6,8 @@
 
 package sphere;
 
-import sphere.zbuffer.Lecture;
 import sphere.zbuffer.Creation;
+import sphere.zbuffer.Lecture;
 import window.Fenetre;
 import window.view.AbstractVueGLCanvas;
 

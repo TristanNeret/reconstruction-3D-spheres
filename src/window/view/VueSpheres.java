@@ -32,6 +32,7 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
   
     
     protected MainSphere _ms;
+    protected float _v_x, _v_y, _v_z;
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -116,30 +117,36 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
         // Gestion de l'eclairage
         this.setLight();
         
-        // rotate on the three axis
-        float rotate_x = (float)this._rand.nextInt(101)/100;
+        // Rotate on the three axis
+        /*float rotate_x = (float)this._rand.nextInt(101)/100;
         float rotate_y = (float)this._rand.nextInt(101)/100;
         float rotate_z = (float)this._rand.nextInt(101)/100;
-        this._gl.glRotatef(this._rotateT, rotate_x, rotate_y, rotate_z);
+        this._gl.glRotatef(this._rotateT, rotate_x, rotate_y, rotate_z);*/
         
         // Draw sphere 
-        float v_x, v_y, v_z;
-        this._translations = new ArrayList<>();
-        for(int i=0;i<this._spheres.size();i++) {
+        if(this._test) {
+            this._translations = new ArrayList<>();
+            for(int i=0;i<this._spheres.size();i++) {
+
+                this._v_x = (((float)this._rand.nextInt(401)/100)-(float)2);
+                this._v_y = (((float)this._rand.nextInt(401)/100)-(float)2);
+                this._v_z = (((float)this._rand.nextInt(1001)/100)-(float)8);
+                this._translations.add(this._v_x);
+                this._translations.add(this._v_y);
+                this._translations.add(this._v_z);
+
+            }
+        }
+        
+        int s = 0;
+        for(int i=0;i<this._spheres.size()*3;i+=3) {
       
-            GLUquadric qobj1 = this._spheres.get(i);
+            GLUquadric qobj1 = this._spheres.get(s);
             this._gl.glPushMatrix();
-   
-            v_x = (((float)this._rand.nextInt(601)/100)-3);//*(this._rand.nextInt(61)/10);
-            v_y = (((float)this._rand.nextInt(601)/100)-3);//*(this._rand.nextInt(61)/10);
-            v_z = (((float)this._rand.nextInt(601)/100)-3);//*(this._rand.nextInt(61)/10);
-            this._translations.add(v_x);
-            this._translations.add(v_y);
-            this._translations.add(v_z);
-            this._gl.glTranslatef(v_x, v_y, v_z);
-            
+            this._gl.glTranslatef(this._translations.get(i), this._translations.get(i+1), this._translations.get(i+2));
             _glu.gluSphere(qobj1, 1.f, 100, 100);
             this._gl.glPopMatrix();
+            s++;
         
         }
 
@@ -155,6 +162,8 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
             
             distance = this.getZBufferTab(gLDrawable);
             float res = this._fonction.getDistanceEuclidienne(this._pixels,distance);
+            this._nbIterations++;
+            this._test = true;
             
             // Memorisation du meilleur resultat
             if(res < this._distanceMem) {
@@ -165,15 +174,17 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
                 
                 this._ms.setSpheres(this._spheres);
                 this._ms.setTranslations(this._translationsMem);
+                this._ms.updateInformations(res + "", this._nbIterations + "");
                 this._ms.updateView();
                 
-                System.out.println("Distance euclidienne: " + res);
+                System.out.println("Distance euclidienne: " + res + " (" 
+                        + this._nbIterations + " iterations)");
                 
             }
             
         } else {
             
-            this._test = !this._test;
+            //this._test = !this._test;
             
         }
        
