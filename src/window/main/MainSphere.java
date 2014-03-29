@@ -86,11 +86,11 @@ public class MainSphere extends Observable {
         this._spheres = _spheres;
     }
 
-    public ArrayList<Float> getTranslations() {
+    public ArrayList<Coordonnees> getTranslations() {
         return _translations;
     }
 
-    public void setTranslations(ArrayList<Float> _translations) {
+    public void setTranslations(ArrayList<Coordonnees> _translations) {
         this._translations = _translations;
     }
 

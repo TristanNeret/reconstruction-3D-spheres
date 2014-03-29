@@ -26,6 +26,7 @@ import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 import sphere.algorithme.Fonction;
 import sphere.zbuffer.Creation;
+import window.main.Coordonnees;
 
 /**
  * AbstractVueGLCanvas
@@ -42,8 +43,8 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
     protected float[][] _pixels;
     protected ArrayList<GLUquadric> _spheres;
     protected ArrayList<GLUquadric> _spheresMem;
-    protected ArrayList<Float> _translations;
-    protected ArrayList<Float> _translationsMem;
+    protected ArrayList<Coordonnees> _translations;
+    protected ArrayList<Coordonnees> _translationsMem;
     protected float _distanceMem;
     protected int _nbSpheres;
     protected Random _rand;
@@ -87,7 +88,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
         this._test = true;
         
         // Preparation de JOGL
-        this._FPSAnimator = new FPSAnimator(this, 30); 
+        this._FPSAnimator = new FPSAnimator(this, 60); 
         this.addGLEventListener(this);
     
         // Create GLU.

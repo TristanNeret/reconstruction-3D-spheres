@@ -108,11 +108,11 @@ public class VueFinale extends AbstractVueGLCanvas implements Observer {
         
         // Draw sphere 
         int s = 0;
-        for(int i=0;i<this._spheres.size()*3;i+=3) {
+        for(int i=0;i<this._spheres.size();i++) {
       
             GLUquadric qobj1 = this._spheres.get(s);
             this._gl.glPushMatrix();
-            this._gl.glTranslatef(this._translations.get(i), this._translations.get(i+1), this._translations.get(i+2));
+            this._gl.glTranslatef(this._translations.get(i).getX(), this._translations.get(i).getY(), this._translations.get(i).getZ());
             _glu.gluSphere(qobj1, 1.f, 100, 100);
             this._gl.glPopMatrix();
             s++;
@@ -123,7 +123,7 @@ public class VueFinale extends AbstractVueGLCanvas implements Observer {
         this._gl.glEnd();                                             
 
         // increasing rotation for the next iteration                   
-        this._rotateT += 0.2f; 
+        //this._rotateT += 0.2f; 
        
     } // display(GLAutoDrawable glad)
     
