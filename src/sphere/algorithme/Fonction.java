@@ -48,13 +48,15 @@ public class Fonction {
             for(int j=0;j<height;j++) {
                 
                 //dTmp = (float) Math.sqrt(Math.pow(pixels1[i][j], 2)+Math.pow(pixels2[i][j], 2));
-                dTmp = Math.abs(pixels1[i][j]-pixels2[i][j]);
+                //dTmp = Math.abs(pixels1[i][j]-pixels2[i][j]);
+                dTmp = (float) Math.pow(pixels1[i][j]-pixels2[i][j],2);
                 distance += dTmp;
                 
             }
         }
         
-        return distance;
+        //return distance;
+        return (float) Math.sqrt(distance);
         
     } // getDistanceEuclidienne(float[][] pixels1, float[][] pixels2)
     
