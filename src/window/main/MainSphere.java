@@ -23,7 +23,7 @@ public class MainSphere extends Observable {
     
     
     private ArrayList<GLUquadric> _spheres;
-    private ArrayList<Float> _translations;
+    private ArrayList<Coordonnees> _translations;
     private ArrayList<String> _listeDiff;
     private ArrayList<String> _listeIterations;
     private String _diff;

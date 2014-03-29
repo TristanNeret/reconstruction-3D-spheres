@@ -188,10 +188,6 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
                 
             }
             
-        } else {
-            
-            //this._test = !this._test;
-            
         }
        
     } // display(GLAutoDrawable glad)

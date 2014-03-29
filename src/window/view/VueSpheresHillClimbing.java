@@ -18,6 +18,7 @@ import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLUquadric;
 import window.main.MainSphere;
 import sphere.zbuffer.Lecture;
+import window.main.Coordonnees;
 
 /**
  * VueSpheresHillClimbing
@@ -125,25 +126,28 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
         
         // Draw sphere 
         if(this._test) {
-            this._translations = new ArrayList<>();
+            //this._translations = new ArrayList<>();
             for(int i=0;i<this._spheres.size();i++) {
 
                 this._v_x = (((float)this._rand.nextInt(401)/100)-(float)2);
                 this._v_y = (((float)this._rand.nextInt(401)/100)-(float)2);
                 this._v_z = (((float)this._rand.nextInt(1001)/100)-(float)8);
-                this._translations.add(this._v_x);
-                this._translations.add(this._v_y);
-                this._translations.add(this._v_z);
+              
+                Coordonnees c = this._translations.get(i);
+                c.setX(_v_x);
+                c.setY(_v_y);
+                c.setZ(_v_z);
+                this._translations.set(i, c);
 
             }
         }
         
         int s = 0;
-        for(int i=0;i<this._spheres.size()*3;i+=3) {
+        for(int i=0;i<this._spheres.size();i++) {
       
             GLUquadric qobj1 = this._spheres.get(s);
             this._gl.glPushMatrix();
-            this._gl.glTranslatef(this._translations.get(i), this._translations.get(i+1), this._translations.get(i+2));
+            this._gl.glTranslatef(this._translations.get(i).getX(), this._translations.get(i).getY(), this._translations.get(i).getZ());
             _glu.gluSphere(qobj1, 1.f, 100, 100);
             this._gl.glPopMatrix();
             s++;
@@ -154,7 +158,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
         this._gl.glEnd();                                             
 
         // increasing rotation for the next iteration                   
-        this._rotateT += 0.2f; 
+        //this._rotateT += 0.2f; 
         
         // Affichage de la distance euclidienne
         float[][] distance;
@@ -181,10 +185,6 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
                         + this._nbIterations + " iterations)");
                 
             }
-            
-        } else {
-            
-            //this._test = !this._test;
             
         }
        
