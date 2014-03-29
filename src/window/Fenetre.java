@@ -13,9 +13,11 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import window.main.MainSphere;
 import window.view.AbstractVueGLCanvas;
+import window.view.VueCourbe;
 import window.view.VueFinale;
 import window.view.VueInformations;
 import window.view.VueSpheres;
+import window.view.VueSpheresHillClimbing;
 import window.view.VueZBuffer;
 
 /**
@@ -33,6 +35,7 @@ public class Fenetre extends JFrame {
     private final MainSphere _ms;
     private final VueZBuffer vz;
     private final VueInformations vi;
+    private final VueCourbe vc;
     private final AbstractVueGLCanvas vs;
     private final AbstractVueGLCanvas vf;
     
@@ -51,21 +54,22 @@ public class Fenetre extends JFrame {
         
         this._ms = new MainSphere();
         
+        // Vue de l'image de profondeur de depart
         vz = new VueZBuffer(this._ms,path);
         this._ms.addObserver(vz);
-        //this.add(vz,BorderLayout.WEST);
         
+        // Vue de la fentre 3D
         vs = new VueSpheres(this._ms,path,this._nbSpheres);
+        //vs = new VueSpheresHillClimbing(this._ms,path,this._nbSpheres);
         this._ms.addObserver((Observer) vs);
-        //this.add(vs,BorderLayout.EAST);
         
+        // Vue du meilleur resultat observe
         vf = new VueFinale(this._ms,path);
         this._ms.addObserver((Observer) vf);
-        //this.add(vf,BorderLayout.SOUTH);
         
+        // Informations sur le meilleur resultat observe
         vi = new VueInformations(this._ms);
         this._ms.addObserver((Observer) vi);
-        //this.add(vf,BorderLayout.SOUTH);
                      
         // Split entre les vues
         JSplitPane splitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
@@ -78,6 +82,11 @@ public class Fenetre extends JFrame {
                                    splitPane1, splitPane2);
         splitPane3.setEnabled(false);
         this.add(splitPane3,BorderLayout.NORTH);
+        
+        // Courbe d'evolution
+        vc = new VueCourbe(this._ms,path);
+        this._ms.addObserver((Observer)vc);
+        this.add(vc,BorderLayout.SOUTH);
         
         pack();
         this.setLocationRelativeTo(null);

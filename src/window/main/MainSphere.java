@@ -24,6 +24,8 @@ public class MainSphere extends Observable {
     
     private ArrayList<GLUquadric> _spheres;
     private ArrayList<Float> _translations;
+    private ArrayList<String> _listeDiff;
+    private ArrayList<String> _listeIterations;
     private String _diff;
     private String _nbIterations;
     
@@ -34,6 +36,9 @@ public class MainSphere extends Observable {
     
     
     public MainSphere() {
+        
+        this._listeDiff = new ArrayList<>();
+        this._listeIterations = new ArrayList<>();
         
     } // MainSphere()
     
@@ -51,6 +56,8 @@ public class MainSphere extends Observable {
      */
     public void updateInformations(String diff, String nbIterations) {
         
+        this._listeDiff.add(diff);
+        this._listeIterations.add(nbIterations);
         this._diff = diff;
         this._nbIterations = nbIterations;
         
@@ -101,6 +108,22 @@ public class MainSphere extends Observable {
 
     public void setNbIterations(String _nbIterations) {
         this._nbIterations = _nbIterations;
+    }
+
+    public ArrayList<String> getListeDiff() {
+        return _listeDiff;
+    }
+
+    public void setListeDiff(ArrayList<String> _listeDiff) {
+        this._listeDiff = _listeDiff;
+    }
+
+    public ArrayList<String> getListeIterations() {
+        return _listeIterations;
+    }
+
+    public void setListeIterations(ArrayList<String> _listeIterations) {
+        this._listeIterations = _listeIterations;
     }
     
     

@@ -20,10 +20,10 @@ import window.main.MainSphere;
 import sphere.zbuffer.Lecture;
 
 /**
- * VueSpheres
+ * VueSpheresHillClimbing
  * @author Tristan
  */
-public class VueSpheres extends AbstractVueGLCanvas implements Observer {
+public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Observer {
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -40,7 +40,7 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueSpheres(MainSphere ms, String path, int nbSpheres) {
+    public VueSpheresHillClimbing(MainSphere ms, String path, int nbSpheres) {
         
         this._ms = ms;
         
@@ -58,7 +58,7 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
         // Dimension de la fenetre
         this.setPreferredSize(new Dimension(this._width, this._height));
         
-    } // VueSpheres()
+    } // VueSpheresHillClimbing()
 
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -222,4 +222,4 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
     } // update(Observable o, Object arg)
     
     
-} // class VueSpheres
+} // class VueSpheresHillClimbing
