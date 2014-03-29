@@ -103,7 +103,7 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
         this._gl.glEnd();                                             
 
         // increasing rotation for the next iteration                   
-        this._rotateT += 0.2f; 
+        //this._rotateT += 0.2f; 
         
         // Dessine l'image de z-buffer
         if (this._test) {

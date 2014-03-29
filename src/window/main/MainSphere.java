@@ -23,7 +23,7 @@ public class MainSphere extends Observable {
     
     
     private ArrayList<GLUquadric> _spheres;
-    private ArrayList<Float> _translations;
+    private ArrayList<Coordonnees> _translations;
     private String _diff;
     private String _nbIterations;
     
@@ -79,11 +79,11 @@ public class MainSphere extends Observable {
         this._spheres = _spheres;
     }
 
-    public ArrayList<Float> getTranslations() {
+    public ArrayList<Coordonnees> getTranslations() {
         return _translations;
     }
 
-    public void setTranslations(ArrayList<Float> _translations) {
+    public void setTranslations(ArrayList<Coordonnees> _translations) {
         this._translations = _translations;
     }
 
