@@ -45,6 +45,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
     protected ArrayList<GLUquadric> _spheresMem;
     protected ArrayList<Coordonnees> _translations;
     protected ArrayList<Coordonnees> _translationsMem;
+    protected float _distance;
     protected float _distanceMem;
     protected int _nbSpheres;
     protected Random _rand;

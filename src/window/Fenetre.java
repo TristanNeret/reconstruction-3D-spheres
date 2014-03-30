@@ -59,8 +59,8 @@ public class Fenetre extends JFrame {
         this._ms.addObserver(vz);
         
         // Vue de la fentre 3D
-        vs = new VueSpheres(this._ms,path,this._nbSpheres);
-        //vs = new VueSpheresHillClimbing(this._ms,path,this._nbSpheres);
+        //vs = new VueSpheres(this._ms,path,this._nbSpheres);
+        vs = new VueSpheresHillClimbing(this._ms,path,this._nbSpheres);
         this._ms.addObserver((Observer) vs);
         
         // Vue du meilleur resultat observe
@@ -86,7 +86,7 @@ public class Fenetre extends JFrame {
         // Courbe d'evolution
         vc = new VueCourbe(this._ms,path);
         this._ms.addObserver((Observer)vc);
-        this.add(vc,BorderLayout.SOUTH);
+        //this.add(vc,BorderLayout.SOUTH);
         
         pack();
         this.setLocationRelativeTo(null);

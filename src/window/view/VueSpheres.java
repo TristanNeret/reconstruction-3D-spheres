@@ -168,6 +168,7 @@ public class VueSpheres extends AbstractVueGLCanvas implements Observer {
             
             distance = this.getZBufferTab(gLDrawable);
             float res = this._fonction.getDistanceEuclidienne(this._pixels,distance);
+            this._distance = res;
             this._nbIterations++;
             this._test = true;
             

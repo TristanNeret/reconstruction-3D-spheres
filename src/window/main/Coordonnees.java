@@ -6,7 +6,7 @@
 package window.main;
 
 /**
- *
+ * Coordonnees
  * @author Christophe
  */
 public class Coordonnees {
@@ -52,4 +52,46 @@ public class Coordonnees {
         this.r = r;
     }
 
-}
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Coordonnees other = (Coordonnees) obj;
+        if (Float.floatToIntBits(this.x) != Float.floatToIntBits(other.x)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.y) != Float.floatToIntBits(other.y)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.z) != Float.floatToIntBits(other.z)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.r) != Float.floatToIntBits(other.r)) {
+            return false;
+        }
+        
+        return true;
+        
+    } // equals(Object obj)
+    
+    
+    @Override
+    public String toString() {
+        
+        return "{" + this.x + "," + this.y + "," 
+                + this.z + "," + this.r + "}";
+        
+    } // toString()
+
+} // class Coordonnees

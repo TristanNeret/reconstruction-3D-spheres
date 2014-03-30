@@ -16,6 +16,7 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -28,7 +29,7 @@ import window.main.MainSphere;
  * VueCourbe
  * @author Tristan
  */
-public class VueCourbe extends JPanel implements Observer {
+public class VueCourbe extends JFrame implements Observer {
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -72,8 +73,12 @@ public class VueCourbe extends JPanel implements Observer {
         this._chartPanel.setPreferredSize(new java.awt.Dimension(this._zbuffer.getWidth()*2, this._zbuffer.getHeight()));
         // add it to our application
         this.add(this._chartPanel);
-        //setContentPane(chartPanel);
       
+        pack();
+        setResizable(false);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
     } // VueZBuffer(String path)
     
     
@@ -140,8 +145,8 @@ public class VueCourbe extends JPanel implements Observer {
       // Create the chart
       JFreeChart chart = ChartFactory.createXYLineChart(
          title,                    // The chart title
-         "nb iterations",          // x axis label
-         "distance euclidienne",   // y axis label
+         "Nombre d'itérations",    // x axis label
+         "Distance euclidienne",   // y axis label
          dataset,                  // The dataset for the chart
          PlotOrientation.VERTICAL,
          false,                    // Is a legend required?
