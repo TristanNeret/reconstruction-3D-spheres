@@ -7,6 +7,6 @@ Nécéssite les librairies Java3D:
 - jogl-all.jar
 - gluegen-rt.jar
 
-Ainsi que JFreeChart inclu au projet:
+Ainsi que JFreeChart inclus au projet:
 - jcommon-1.0.21.jar
 - jfreechart-1.0.17.jar
