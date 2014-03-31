@@ -27,15 +27,12 @@ public class Fonction {
      * 3 - on travaille sur z
      * 4 - on travaille sur r
      */
-    //protected int _coordTest;
     protected HashMap<Integer,Integer> _coordTest;
     /**
      * TRUE = on avance dans le sens positif
      * FALSE = on avance dans le sens negatif
      */
-    //protected boolean _coordSens;
     protected HashMap<Integer,Boolean> _coordSens;
-    //protected Coordonnees _coordMem;
     protected HashMap<Integer,Coordonnees> _coordMem;
     protected double _pas;
     protected int _sphere;
@@ -48,11 +45,8 @@ public class Fonction {
     
     public Fonction() {
         
-        //this._coordTest = 1;
         this._coordTest = new HashMap<>();
-        //this._coordSens = false;
         this._coordSens = new HashMap<>();
-        //this._coordMem = null;
         this._coordMem = new HashMap<>();
         this._pas = 0.1;
 
@@ -126,8 +120,6 @@ public class Fonction {
             } else if(distPrec < dist && !this._coordSens.get(numSphere)) {
                 this._coordSens.put(numSphere,true);
                 result = this._coordMem.get(numSphere);
-            } else {
-                this._coordMem.put(numSphere,prec);
             }
 
             switch (this._coordTest.get(numSphere)) {
@@ -177,10 +169,10 @@ public class Fonction {
                         result.setZ((float) (prec.getZ()-this._pas));
                     }
                     // Change le sens de lecture si necessaire
-                    if(result.getZ() < -2) {
+                    if(result.getZ() < -10) {
                         this._coordSens.put(numSphere,true);
                         result.setZ(this._coordMem.get(numSphere).getZ());
-                    } else if(result.getZ() > 2) {
+                    } else if(result.getZ() > 10) {
                         this._coordSens.put(numSphere,false);
                         this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     }
@@ -195,19 +187,19 @@ public class Fonction {
                         result.setR((float) (prec.getR()-this._pas));
                     }
                     // Change le sens de lecture si necessaire
-                    if(result.getR() < -2) {
+                    if(result.getR() < -10) {
                         this._coordSens.put(numSphere,true);
                         result.setR(this._coordMem.get(numSphere).getR());
-                    } else if(result.getR() > 2) {
+                    } else if(result.getR() > 10) {
                         this._coordSens.put(numSphere,false);
                         this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     }
                     break;
 
                 default:
-                    /*this._coordTest.put(numSphere,1);
-                    this._coordSens.put(numSphere,false);
-                    this._pas = this._pas/1.001;*/
+                    //this._coordTest.put(numSphere,1);
+                    //this._coordSens.put(numSphere,false);
+                    //this._pas = this._pas/1.001;
                     this._sphere = (this._sphere+1)%this._coordMem.size();
                     break;
 

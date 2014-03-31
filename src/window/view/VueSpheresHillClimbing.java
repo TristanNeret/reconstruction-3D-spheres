@@ -144,6 +144,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
                     c.setX(_v_x);
                     c.setY(_v_y);
                     c.setZ(_v_z);
+                    c.setR(1);
                     this._translations.set(i, c);
                     
                 } else {
@@ -163,7 +164,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
             GLUquadric qobj1 = this._spheres.get(s);
             this._gl.glPushMatrix();
             this._gl.glTranslatef(this._translations.get(i).getX(), this._translations.get(i).getY(), this._translations.get(i).getZ());
-            _glu.gluSphere(qobj1, 1.f, 100, 100);
+            _glu.gluSphere(qobj1, this._translations.get(i).getR(), 100, 100);
             this._gl.glPopMatrix();
             s++;
         
@@ -186,7 +187,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
             this._test = true;
             
             // Memorisation du meilleur resultat
-            if(res < this._distanceMem) {
+            if(res <= this._distanceMem) {
                 
                 this._distanceMem = res;
                 this._spheresMem = this._spheres;
