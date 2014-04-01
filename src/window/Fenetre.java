@@ -39,7 +39,7 @@ public class Fenetre extends JFrame {
     private final AbstractVueGLCanvas vs;
     private final AbstractVueGLCanvas vf;
     
-    private final int _nbSpheres = 2;
+    private final int _nbSpheres = 3;
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -59,8 +59,8 @@ public class Fenetre extends JFrame {
         this._ms.addObserver(vz);
         
         // Vue de la fentre 3D
-        //vs = new VueSpheres(this._ms,path,this._nbSpheres);
-        vs = new VueSpheresHillClimbing(this._ms,path,this._nbSpheres);
+        vs = new VueSpheres(this._ms,path,this._nbSpheres);
+        //vs = new VueSpheresHillClimbing(this._ms,path,this._nbSpheres);
         this._ms.addObserver((Observer) vs);
         
         // Vue du meilleur resultat observe

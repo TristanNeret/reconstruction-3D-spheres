@@ -24,7 +24,7 @@ public class Sphere {
     public static void main(String[] args) {
         
         // Permet de creer une image de profondeur
-        //AbstractVueGLCanvas scene = new Creation("zbuffer.png",0,200,200);
+        //AbstractVueGLCanvas scene = new Creation("zbuffer_sphere.png",0,200,200);
         
         // Permet de recuperer le tableau de pixels d'une image de profondeur
         //Lecture zbuffer = new Lecture("zbuffer.png");
@@ -32,7 +32,7 @@ public class Sphere {
         //zbuffer.affichage(pixels, "zbuffer_test.png");
         
         // Affichage de la fenetre
-        Fenetre app = new Fenetre("zbuffer.png");
+        Fenetre app = new Fenetre("zbuffer_sphere.png");
         
     } // main(String[] args)
     

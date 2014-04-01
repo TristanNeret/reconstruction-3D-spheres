@@ -120,6 +120,8 @@ public class Fonction {
             } else if(distPrec < dist && !this._coordSens.get(numSphere)) {
                 this._coordSens.put(numSphere,true);
                 result = this._coordMem.get(numSphere);
+            } else {
+                this._coordMem.put(numSphere, result);
             }
 
             switch (this._coordTest.get(numSphere)) {
@@ -169,10 +171,10 @@ public class Fonction {
                         result.setZ((float) (prec.getZ()-this._pas));
                     }
                     // Change le sens de lecture si necessaire
-                    if(result.getZ() < -10) {
+                    if(result.getZ() < -5) {
                         this._coordSens.put(numSphere,true);
                         result.setZ(this._coordMem.get(numSphere).getZ());
-                    } else if(result.getZ() > 10) {
+                    } else if(result.getZ() > 5) {
                         this._coordSens.put(numSphere,false);
                         this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     }
@@ -187,19 +189,19 @@ public class Fonction {
                         result.setR((float) (prec.getR()-this._pas));
                     }
                     // Change le sens de lecture si necessaire
-                    if(result.getR() < -10) {
+                    if(result.getR() < -5) {
                         this._coordSens.put(numSphere,true);
                         result.setR(this._coordMem.get(numSphere).getR());
-                    } else if(result.getR() > 10) {
+                    } else if(result.getR() > 5) {
                         this._coordSens.put(numSphere,false);
                         this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     }
                     break;
 
                 default:
-                    //this._coordTest.put(numSphere,1);
-                    //this._coordSens.put(numSphere,false);
-                    //this._pas = this._pas/1.001;
+                    /*this._coordTest.put(numSphere,1);
+                    this._coordSens.put(numSphere,false);
+                    this._pas = this._pas/1.001;*/
                     this._sphere = (this._sphere+1)%this._coordMem.size();
                     break;
 

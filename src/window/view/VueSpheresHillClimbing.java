@@ -134,7 +134,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
                 // Des que la distance euclidienne est correct, on utilise un
                 // algorithme de Hill-Climbing pour ameliorer le resultat
                 Coordonnees c = this._translations.get(i);
-                if(this._distanceMem > 45) {
+                if(this._distanceMem > 42) {
                     
                     // Random
                     this._v_x = (((float)this._rand.nextInt(401)/100)-(float)2);

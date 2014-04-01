@@ -77,13 +77,13 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
         this._gl.glLoadIdentity();
         this._gl.glTranslatef(0.0f, 0.0f, -5.0f);
         
-        // Gestion de l'eclairage
-        this.setLight();
-        
         // Rotate on the three axis
         /*this._gl.glRotatef(this._rotateT, 1.0f, 0.0f, 0.0f);
         this._gl.glRotatef(this._rotateT, 0.0f, 1.0f, 0.0f);
         this._gl.glRotatef(this._rotateT, 0.0f, 0.0f, 1.0f);*/
+        
+        // Gestion de l'eclairage
+        this.setLight();
 
         // Draw sphere 
         GLUquadric qobj0 = this._glu.gluNewQuadric();
@@ -98,7 +98,55 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
         this._gl.glTranslatef(2.5f, 2.5f, -5.f);
     	this._glu.gluSphere(qobj1, 1.f, 100, 100);
     	this._gl.glPopMatrix();
-
+        
+        // Draw triangle
+        /*GLUquadric qobj2 = this._glu.gluNewQuadric();
+        this._gl.glPushMatrix();
+        this._gl.glColor3f(1, 1, 1);
+        this._gl.glBegin(GL.GL_TRIANGLE_FAN);
+        this._gl.glVertex3f(-1, -1, 0);
+        this._gl.glVertex3f(1, -1, -1);
+        this._gl.glVertex3f(0, 1, 0);*/
+        
+        // Draw cube
+        /*this._gl.glBegin(GL2.GL_QUADS);
+        // front : blue
+        this._gl.glColor3f(0.0f, 0.0f, 1.0f);
+        this._gl.glVertex3f(-0.5f, +0.5f, +0.5f);
+        this._gl.glVertex3f(-0.5f, -0.5f, +0.5f);
+        this._gl.glVertex3f(+0.5f, -0.5f, +0.5f);
+        this._gl.glVertex3f(+0.5f, +0.5f, +0.5f);
+        // back : green
+        this._gl.glColor3f(0.0f, 1.0f, 0.0f);
+        this._gl.glVertex3f(+0.5f, -0.5f, -0.5f);
+        this._gl.glVertex3f(+0.5f, +0.5f, -0.5f);
+        this._gl.glVertex3f(-0.5f, +0.5f, -0.5f);
+        this._gl.glVertex3f(-0.5f, -0.5f, -0.5f);
+        // left : red
+        this._gl.glColor3f(1.0f, 0.0f, 0.0f);
+        this._gl.glVertex3f(-0.5f, +0.5f, +0.5f);
+        this._gl.glVertex3f(-0.5f, +0.5f, -0.5f);
+        this._gl.glVertex3f(-0.5f, -0.5f, -0.5f);
+        this._gl.glVertex3f(-0.5f, -0.5f, +0.5f);
+        // right : orange
+        this._gl.glColor3f(1.0f, 0.4f, 0.0f);
+        this._gl.glVertex3f(+0.5f, +0.5f, -0.5f);
+        this._gl.glVertex3f(+0.5f, +0.5f, +0.5f);
+        this._gl.glVertex3f(+0.5f, -0.5f, +0.5f);
+        this._gl.glVertex3f(+0.5f, -0.5f, -0.5f);
+        // top : white
+        this._gl.glColor3f(1.0f, 1.0f, 1.0f);
+        this._gl.glVertex3f(+0.5f, +0.5f, +0.5f);
+        this._gl.glVertex3f(-0.5f, +0.5f, +0.5f);
+        this._gl.glVertex3f(-0.5f, +0.5f, -0.5f);
+        this._gl.glVertex3f(+0.5f, +0.5f, -0.5f);
+        // bottom : yellow
+        this._gl.glColor3f(1.0f, 1.0f, 0.0f);
+        this._gl.glVertex3f(+0.5f, -0.5f, +0.5f);
+        this._gl.glVertex3f(+0.5f, -0.5f, -0.5f);
+        this._gl.glVertex3f(-0.5f, -0.5f, -0.5f);
+        this._gl.glVertex3f(-0.5f, -0.5f, +0.5f);*/
+        
         // Done Drawing 
         this._gl.glEnd();                                             
 
