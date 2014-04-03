@@ -288,7 +288,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
             for (int y=0; y<_height/1; y++) {
                 
                 // Pas de reechantillonnage
-                //int color = (int)(_pixelsBis.get(x+_width*y)*255);
+                //float color = (float)(_pixelsBis.get(x+_width*y)*255);
                 // Reechantillonage
                 float color = (float)(tab[x+_width*(_height-1-y)]*255);
  
@@ -364,7 +364,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
             for (int y=0; y<this._height/1; y++) {
                 
                 // Pas de reechantillonnage
-                //int color = (int)(Creation._pixels.get(x+Creation._width*y)*255);
+                //float color = (float)(this._pixelsBis.get(x+this._width*y)*255);
                 // Reechantillonage
                 int color = (int)(tab[x+this._width*(this._height-1-y)]*255);
                 

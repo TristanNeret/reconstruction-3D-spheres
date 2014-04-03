@@ -74,8 +74,8 @@ public class Fonction {
         float distance, dTmp;
         distance = 0;
         
-        for(int i=0;i<width;i++) {
-            for(int j=0;j<height;j++) {
+        for(int i=0;i<width;i+=1) {
+            for(int j=0;j<height;j+=1) {
                 
                 //dTmp = (float) Math.sqrt(Math.pow(pixels1[i][j], 2)+Math.pow(pixels2[i][j], 2));
                 //dTmp = Math.abs(pixels1[i][j]-pixels2[i][j]);
@@ -201,7 +201,7 @@ public class Fonction {
                 default:
                     /*this._coordTest.put(numSphere,1);
                     this._coordSens.put(numSphere,false);
-                    this._pas = this._pas/1.001;*/
+                    this._pas = this._pas/2;*/
                     this._sphere = (this._sphere+1)%this._coordMem.size();
                     break;
 
