@@ -84,8 +84,12 @@ public class VueInformations extends JPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         
-        this._distance_value.setText(this._ms.getDiff());
-        this._iterations_value.setText(this._ms.getNbIterations());
+        if(arg.toString().equals("1")) {
+        
+            this._distance_value.setText(this._ms.getDiff());
+            this._iterations_value.setText(this._ms.getNbIterations());
+        
+        }
        
     } // update(Observable o, Object arg)
     

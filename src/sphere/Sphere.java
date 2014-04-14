@@ -6,6 +6,8 @@
 
 package sphere;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sphere.zbuffer.Creation;
 import sphere.zbuffer.Lecture;
 import window.Fenetre;
@@ -23,18 +25,26 @@ public class Sphere {
      */
     public static void main(String[] args) {
         
-        // Permet de creer une image de profondeur
-        //AbstractVueGLCanvas scene = new Creation("zbuffer_sphere.png",0,200,200);
+        // Permet de creer une image de profondeur et de recuperer le tableau
+        // de z-buffer
+        /*Creation scene = new Creation("zbuffer_sphere",0,200,200);
+        // Attend que scene soit dessinee pour recuperer les donnees z-buffer
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Sphere.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        scene.afficherCreation(false);
+        float[] newZBufferTab = scene.getCreationBufferTab();*/
         
-        // Permet de recuperer le tableau de pixels d'une image de profondeur
-        //Lecture zbuffer = new Lecture("zbuffer.png");
-        //float[][] pixels = zbuffer.lireImage();
-        //zbuffer.affichage(pixels, "zbuffer_test.png");
+        // Permet de recuperer le tableau de pixels d'une image de profondeur a
+        // partir d'un fichier texte
+        Lecture zbuffer = new Lecture("zbuffer_sphere.txt");
+        float[] pixels = zbuffer.lireTexte();
         
         // Affichage de la fenetre
-        Fenetre app = new Fenetre("zbuffer_sphere.png");
+        Fenetre app = new Fenetre("zbuffer_sphere.png", pixels);
         
-    } // main(String[] args)
-    
+    }    
     
 } // class Sphere

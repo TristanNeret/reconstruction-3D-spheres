@@ -6,18 +6,11 @@
 
 package window.view;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -41,7 +34,6 @@ public class VueCourbe extends JFrame implements Observer {
     protected ArrayList<String> _listeDiff;
     protected ArrayList<String> _listeIterations;
     protected ChartPanel _chartPanel;
-    private BufferedImage _zbuffer;
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -49,20 +41,12 @@ public class VueCourbe extends JFrame implements Observer {
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueCourbe(MainSphere ms, String path) {
+    public VueCourbe(MainSphere ms, int width, int height) {
         
         this._ms = ms;
         this._listeDiff = new ArrayList<>();
         this._listeIterations = new ArrayList<>();
-        
-        try {
-            
-            this._zbuffer = ImageIO.read(new File(path));
-            
-        } catch (IOException ex) {
-            Logger.getLogger(VueZBuffer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+     
         // This will create the dataset 
         DefaultXYDataset dataset = getData();
         // based on the dataset we create the chart
@@ -70,7 +54,7 @@ public class VueCourbe extends JFrame implements Observer {
         // we put the chart into a panel
         this._chartPanel = new ChartPanel(chart);
         // default size
-        this._chartPanel.setPreferredSize(new java.awt.Dimension(this._zbuffer.getWidth()*2, this._zbuffer.getHeight()));
+        this._chartPanel.setPreferredSize(new java.awt.Dimension(width*2, height));
         // add it to our application
         this.add(this._chartPanel);
       
@@ -164,11 +148,15 @@ public class VueCourbe extends JFrame implements Observer {
     
     @Override
     public void update(Observable o, Object arg) {
+    
+        if(arg.toString().equals("2")) {
 
-        this._listeDiff = this._ms.getListeDiff();
-        this._listeIterations = this._ms.getListeIterations(); 
-        this.afficherGraph();
+            this._listeDiff = this._ms.getListeDiff();
+            this._listeIterations = this._ms.getListeIterations(); 
+            this.afficherGraph();
        
+        }
+        
     } // update(Observable o, Object arg)
     
     

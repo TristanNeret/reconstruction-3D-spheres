@@ -8,8 +8,11 @@ package sphere.zbuffer;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -48,6 +51,7 @@ public class Lecture {
     
     /**
      * Permet de recuperer la valeur de chaque pixel d'une image de profondeur
+     * stocke dans une image
      * @return un tableau contenant chaque pixel de l'image
      */
     public float[][] lireImage() {
@@ -79,6 +83,38 @@ public class Lecture {
         return null;
         
     } // lireImage()  
+    
+    
+    /**
+     * Permet de recuperer la valeur de chaque pixel d'une image de profondeur
+     * stocke dans un fichier texte
+     * @return un tableau contenant chaque pixel de l'image
+     */
+    public float[] lireTexte() {
+        
+        ArrayList<String> liste = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(this._path)))
+        {
+
+            String currentLine;
+            while ((currentLine = br.readLine()) != null) {
+                
+                liste.add(currentLine);
+                    
+            }
+
+        } catch (IOException e) {}
+        
+        float[] res = new float[liste.size()];
+        for(int i=0;i<res.length;i++) {
+            
+            res[i] = Float.parseFloat(liste.get(i));
+            
+        }
+        
+        return res;
+        
+    } // lireTexte()
     
     
     /**

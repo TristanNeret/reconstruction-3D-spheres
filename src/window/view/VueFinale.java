@@ -39,22 +39,14 @@ public class VueFinale extends AbstractVueGLCanvas implements Observer {
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueFinale(MainSphere ms, String path) {
+    public VueFinale(MainSphere ms, int width, int height) {
         
         this._ms = ms;
-        
-        // Recuperation des donnees du z-buffer
-        Lecture lecture = new Lecture(path);
-        this._pixels = lecture.lireImage();
-        
-        // Mise a jour de la largeur et de la hauteur du rendu final
-        this._width = this._pixels.length;
-        this._height = this._pixels[0].length;
 
         // Dimension de la fenetre
-        this.setPreferredSize(new Dimension(this._width, this._height));
+        this.setPreferredSize(new Dimension(width, height));
         
-    } // VueFinale()
+    } // VueFinale(MainSphere ms, int width, int height)
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -156,9 +148,13 @@ public class VueFinale extends AbstractVueGLCanvas implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         
-        this._spheres = this._ms.getSpheres();
-        this._translations = this._ms.getTranslations();
-        this.display();
+        if(arg.toString().equals("1")) {
+            
+            this._spheres = this._ms.getSpheres();
+            this._translations = this._ms.getTranslations();
+            this.display();
+        
+        }
         
     } // update(Observable o, Object arg)
     

@@ -21,6 +21,15 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    ///////////////////////////// VARIABLES ///////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
+    
+    
+    private Frame _frame;
+    private float[] _bufferTab;
+    
+    
+    //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     //////////////////////////// CONSTRUCTEUR /////////////////////////////////
     //////////////////////////////////////////////////////////////////////////
     
@@ -33,12 +42,12 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
         this._height = height;
         
         // Permet d'afficher l'image
-        Frame frame = new Frame("JOGL");
-        frame.add(this);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        frame.setSize(new Dimension(width,height));
-        frame.setVisible(true);
+        this._frame = new Frame("JOGL");
+        this._frame.add(this);
+        this._frame.setResizable(false);
+        this._frame.setLocationRelativeTo(null);
+        this._frame.setSize(new Dimension(width,height));
+        this._frame.setVisible(true);
         
     } // Creation(String path, int sens, int width, int height)
     
@@ -46,6 +55,36 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     ///////////////////////////// FONCTIONS ///////////////////////////////////
     //////////////////////////////////////////////////////////////////////////
+    
+    
+    /**
+     * Permet de recuperer le tableau de profondeur de l'image 3D cree
+     * @return le tableau des valeurs de profondeur de l'image 3D
+     */
+    public float[] getCreationBufferTab() {
+        
+        return this._bufferTab;
+        
+    } // getCreationBufferTab()
+    
+    
+    /**
+     * Permet d'afficher ou non l'image 3D cree
+     * @param visible TRUE si on veut afficher l'image, FALSE sinon
+     */
+    public void afficherCreation(boolean visible) {
+        
+        if(visible) {
+            
+            this._frame.setVisible(true);
+            
+        } else {
+            
+            this._frame.dispose();
+            
+        }
+        
+    } // afficherCreation(boolean visible)
     
     
     ///////////////////////////// OPEN-GL ///////////////////////////////
@@ -155,8 +194,8 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
         
         // Dessine l'image de z-buffer
         if (this._test) {
-         
-            this.saveCreationZBufferPNG(gLDrawable);
+            
+            this._bufferTab = this.saveCreationZBuffer(gLDrawable);
             
         }
        

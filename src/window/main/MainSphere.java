@@ -65,12 +65,15 @@ public class MainSphere extends Observable {
     
     
     /**
-     * Permet d'effacer
+     * Permet de mettre la vue souhaitee a jour
+     * @param num numero de la vue a mettre a jour
+     * - 1 : Vue finale
+     * - 2 : Vue de la courbe
      */
-    public void updateView() {
+    public void updateView(int num) {
         
         setChanged();
-        notifyObservers("1");
+        notifyObservers(num + "");
         
     } // updateView()
     

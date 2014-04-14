@@ -17,7 +17,6 @@ import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLUquadric;
 import window.main.MainSphere;
-import sphere.zbuffer.Lecture;
 import window.main.Coordonnees;
 
 /**
@@ -41,20 +40,15 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueSpheresHillClimbing(MainSphere ms, String path, int nbSpheres) {
+    public VueSpheresHillClimbing(MainSphere ms, float[][] zBufferTab, int width, int height, int nbSpheres) {
         
         this._ms = ms;
+        this._pixels = zBufferTab;
+        this._width = width;
+        this._height = height;
         
         // Nombre de spheres a representer
         this._nbSpheres = nbSpheres;
-        
-        // Recuperation des donnees du z-buffer
-        Lecture lecture = new Lecture(path);
-        this._pixels = lecture.lireImage();
-        
-        // Mise a jour de la largeur et de la hauteur du rendu final
-        this._width = this._pixels.length;
-        this._height = this._pixels[0].length;
         
         // Dimension de la fenetre
         this.setPreferredSize(new Dimension(this._width, this._height));
@@ -134,7 +128,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
                 // Des que la distance euclidienne est correct, on utilise un
                 // algorithme de Hill-Climbing pour ameliorer le resultat
                 Coordonnees c = this._translations.get(i);
-                if(this._distanceMem > 45) {
+                if(this._distanceMem > 11) {
                     
                     // Random
                     this._v_x = (((float)this._rand.nextInt(401)/100)-(float)2);
@@ -186,8 +180,24 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
             this._nbIterations++;
             this._test = true;
             
+            // Met a jour les infos toutes les 50 iterations meme s'il n'y a 
+            // pas de meilleur score
+            if(this._nbIterations%50 == 0) {
+                
+                this._ms.updateInformations(this._distanceMem + "", this._nbIterations + "");
+                this._nbIterationsMem = this._nbIterations;
+                // Mise a jour de la courbe
+                this._ms.updateView(2);
+                
+            }
+            
             // Memorisation du meilleur resultat
             if(res <= this._distanceMem) {
+                
+                // Pour l'effet crenaux
+                if(this._distanceMem < Float.POSITIVE_INFINITY) {
+                    this._ms.updateInformations(this._distanceMem + "", this._nbIterations + "");
+                }
                 
                 this._distanceMem = res;
                 this._spheresMem = this._spheres;
@@ -196,7 +206,10 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
                 this._ms.setSpheres(this._spheresMem);
                 this._ms.setTranslations(this._translationsMem);
                 this._ms.updateInformations(res + "", this._nbIterations + "");
-                this._ms.updateView();
+                // Mise a jour de la vue finale et de la courbe
+                this._ms.updateView(1);
+                this._ms.updateView(2);
+                this._nbIterationsMem = this._nbIterations;
                 
                 System.out.println("Distance euclidienne: " + res + " (" 
                         + this._nbIterations + " iterations)");

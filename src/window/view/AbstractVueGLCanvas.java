@@ -11,7 +11,10 @@ import com.jogamp.opengl.util.GLBuffers;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Random;
@@ -55,6 +58,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
     protected int _width;
     protected int _height;
     protected int _nbIterations;
+    protected int _nbIterationsMem;
     protected float _rotateT;
     protected Fonction _fonction;
     
@@ -113,6 +117,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
     public final void afficher() {
         
         this._nbIterations = 0;
+        this._nbIterationsMem = 0;
         this.requestFocus();
         
     } // afficher()
@@ -224,6 +229,44 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
     
     
     /**
+     * Dessine l'image de profondeur de l'image
+     * @param gLDrawable 
+     * @return le tableau de profondeur de l'image
+     */
+    protected float[][] getZBufferTab(GLAutoDrawable gLDrawable) {
+        
+        this._test = false;
+        
+        //Render scene into (own, special) Frame buffer first
+        this._gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, _frameBufferID[0]);
+        display(gLDrawable);
+
+        //Read pixels (i.e., a ByteBuffer) from buffer
+        this._gl.glBindFramebuffer(GL2.GL_READ_FRAMEBUFFER, _frameBufferID[0]);
+        
+        //Read pixels 
+        this._gl.glReadPixels(0, 0, _width/1, _height/1, GL2.GL_DEPTH_COMPONENT , GL2.GL_FLOAT,
+                        _pixelsBis);
+        
+        // Recuperation du tableau de z-buffer
+        float[][] res = new float[_width][_height];
+        for (int x=0; x<_width/1; x++) {
+            for (int y=0; y<_height/1; y++) {
+                
+                res[x][y] = this._pixelsBis.get(x+y*this._width);
+                
+            }
+        }
+        
+        return res;
+        
+    } // getZBufferTab(GLAutoDrawable gLDrawable)
+    
+    
+    ///////////////////////// SAUVEGARDE Z-BUFFER /////////////////////////////
+    
+    
+    /**
      * Permet de reechantilloner les valeurs de z-buffer
      * @return le tableau echantillonne de z-buffer
      */
@@ -262,48 +305,6 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
     
     
     /**
-     * Dessine l'image de profondeur de l'image
-     * @param gLDrawable 
-     * @return le tableau de profondeur de l'image
-     */
-    protected float[][] getZBufferTab(GLAutoDrawable gLDrawable) {
-        
-        this._test = false;
-        
-        //Render scene into (own, special) Frame buffer first
-        this._gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, _frameBufferID[0]);
-        display(gLDrawable);
-
-        //Read pixels (i.e., a ByteBuffer) from buffer
-        this._gl.glBindFramebuffer(GL2.GL_READ_FRAMEBUFFER, _frameBufferID[0]);
-        
-        //Read pixels 
-        this._gl.glReadPixels(0, 0, _width/1, _height/1, GL2.GL_DEPTH_COMPONENT , GL2.GL_FLOAT,
-                        _pixelsBis);
-
-        float[] tab;
-        float[][] res = new float[_width][_height];
-        tab = this.reechantillonner();
-        for (int x=0; x<_width/1; x++) {
-            for (int y=0; y<_height/1; y++) {
-                
-                // Pas de reechantillonnage
-                //float color = (float)(_pixelsBis.get(x+_width*y)*255);
-                // Reechantillonage
-                float color = (float)(tab[x+_width*(_height-1-y)]*255);
- 
-                if(this._sens == 0) color = 255 - color;
-                res[x][y] = color/255;
-                
-            }
-        }
-        
-        return res;
-        
-    } // getZBufferTab(GLAutoDrawable gLDrawable)
-    
-    
-    /**
      * Enregistre l'image de profondeur de l'image
      * @param pixels tableau de pixels
      */
@@ -338,10 +339,13 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
     
     
     /**
-     * Dessine l'image de profondeur de l'image cree
+     * Dessine l'image de profondeur de l'image cree et recupere le tableau de
+     * pixels de cette image
+     * (enregistre un fichier image et un fichier texte)
      * @param gLDrawable 
+     * @return le tableau des valeurs des valeurs de profondeur de l'image
      */
-    public void saveCreationZBufferPNG(GLAutoDrawable gLDrawable) {
+    public float[] saveCreationZBuffer(GLAutoDrawable gLDrawable) {
         
         this._test = false;
         
@@ -378,15 +382,38 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
         // Sauveagrde de l'image
         try {
             
-            if(this._path == null) this._path = "creation_zbuffer.png";
-            ImageIO.write(bi, "PNG", new File(this._path));
-            System.out.println("Image " + this._path + " enregistree !");
+            String nomFichier = this._path + ".png";
+            ImageIO.write(bi, "PNG", new File(nomFichier));
+            System.out.println("Image " + nomFichier + " enregistree !");
             
         } catch (IOException ex) {
             Logger.getLogger(Creation.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    } // saveCreationZBufferPNG(GLAutoDrawable gLDrawable)
-    
+        // Recupere le tableau de float et enregistre le fichier texte
+        float[] res = null;
+        try {
+            
+            PrintWriter writer = new PrintWriter(this._path + ".txt", "UTF-8");
+            res = new float[this._width*this._height];
+            int i = 0;
+            while (this._pixelsBis.hasRemaining()) {
+
+                res[i] = this._pixelsBis.get();
+                writer.println(res[i]);
+                i++;
+
+            }
+            writer.close();
+            System.out.println("Fichier texte " + this._path + ".txt" + " enregistre !");
+            
+        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+            Logger.getLogger(AbstractVueGLCanvas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // Retourne le FloatBuffer en tableau d'array
+        return res;
+        
+    } // saveCreationZBuffer(GLAutoDrawable gLDrawable, String nomFichier)  
     
 } // AbstractVueGLCanvas
