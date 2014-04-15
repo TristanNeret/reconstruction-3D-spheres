@@ -93,7 +93,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
         this._test = true;
         
         // Preparation de JOGL
-        this._FPSAnimator = new FPSAnimator(this, 60); 
+        this._FPSAnimator = new FPSAnimator(this, 30); 
         this.addGLEventListener(this);
     
         // Create GLU.

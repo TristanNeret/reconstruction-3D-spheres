@@ -261,22 +261,22 @@ public class Fonction {
 
                 case 1:
                     // Deplacement sur x
-                    result.setX((float)((prec.getX() + this._pas)*this._coordSens.get(numSphere)));
+                    result.setX((float)(prec.getX() + this._pas*this._coordSens.get(numSphere)));
                     break;
 
                 case 2:
                     // Deplacement sur y
-                    result.setY((float)((prec.getY() + this._pas)*this._coordSens.get(numSphere)));
+                    result.setY((float)(prec.getY() + this._pas*this._coordSens.get(numSphere)));
                     break;
 
                 case 3:
                     // Deplacement sur z
-                    result.setZ((float)((prec.getZ() + this._pas)*this._coordSens.get(numSphere)));
+                    result.setZ((float)(prec.getZ() + this._pas*this._coordSens.get(numSphere)));
                     break;
 
                 case 4:
                     // Deplacement sur r
-                    result.setR((float)((prec.getR() + this._pas)*this._coordSens.get(numSphere)));
+                    result.setR((float)(prec.getR() + this._pas*this._coordSens.get(numSphere)));
                     break;
 
                 default:

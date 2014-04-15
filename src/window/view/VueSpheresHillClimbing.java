@@ -185,7 +185,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
             if(this._nbIterations%50 == 0) {
                 
                 // Diminution du pas
-                this._fonction.setPas(this._fonction.getPas()/1.001);
+                this._fonction.setPas(this._fonction.getPas()/1.01);
                 
                 this._ms.updateInformations(this._distanceMem + "", this._nbIterations + "");
                 this._nbIterationsMem = this._nbIterations;
