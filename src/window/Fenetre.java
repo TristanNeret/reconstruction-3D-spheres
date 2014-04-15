@@ -40,7 +40,7 @@ public class Fenetre extends JFrame {
     private final AbstractVueGLCanvas vs;
     private final AbstractVueGLCanvas vf;
     
-    private final int _nbSpheres = 2;
+    private final int _nbSpheres = 1;
     private int _width;
     private int _height;
     

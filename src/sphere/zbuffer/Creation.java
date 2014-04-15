@@ -131,12 +131,12 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
     	this._glu.gluSphere(qobj0, 1.f, 100, 100);
     	this._gl.glPopMatrix();
         
-        GLUquadric qobj1 = this._glu.gluNewQuadric();
+        /*GLUquadric qobj1 = this._glu.gluNewQuadric();
     	this._gl.glPushMatrix();
         this._gl.glColor3f(1, 1, 1);
         this._gl.glTranslatef(2.5f, 2.5f, -5.f);
     	this._glu.gluSphere(qobj1, 1.f, 100, 100);
-    	this._gl.glPopMatrix();
+    	this._gl.glPopMatrix();*/
         
         // Draw triangle
         /*GLUquadric qobj2 = this._glu.gluNewQuadric();

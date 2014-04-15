@@ -27,7 +27,7 @@ public class Sphere {
         
         // Permet de creer une image de profondeur et de recuperer le tableau
         // de z-buffer
-        /*Creation scene = new Creation("zbuffer_sphere",0,200,200);
+        Creation scene = new Creation("zbuffer_sphere",0,200,200);
         // Attend que scene soit dessinee pour recuperer les donnees z-buffer
         try {
             Thread.sleep(1000);
@@ -35,7 +35,7 @@ public class Sphere {
             Logger.getLogger(Sphere.class.getName()).log(Level.SEVERE, null, ex);
         }
         scene.afficherCreation(false);
-        float[] newZBufferTab = scene.getCreationBufferTab();*/
+        float[] newZBufferTab = scene.getCreationBufferTab();
         
         // Permet de recuperer le tableau de pixels d'une image de profondeur a
         // partir d'un fichier texte

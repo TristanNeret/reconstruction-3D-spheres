@@ -7,6 +7,7 @@
 package sphere.algorithme;
 
 import java.util.HashMap;
+import java.util.Random;
 import window.main.Coordonnees;
 
 /**
@@ -29,10 +30,10 @@ public class Fonction {
      */
     protected HashMap<Integer,Integer> _coordTest;
     /**
-     * TRUE = on avance dans le sens positif
-     * FALSE = on avance dans le sens negatif
+     * 1 = on avance dans le sens positif
+     * -1 = on avance dans le sens negatif
      */
-    protected HashMap<Integer,Boolean> _coordSens;
+    protected HashMap<Integer,Integer> _coordSens;
     protected HashMap<Integer,Coordonnees> _coordMem;
     protected double _pas;
     protected int _sphere;
@@ -99,7 +100,7 @@ public class Fonction {
      * @param dist distance euclidienne actuelle
      * @return les nouvelles coordonnees de la sphere
      */
-    public Coordonnees getNewCoordonnees(Coordonnees prec, int numSphere, float distPrec, float dist) {
+    /*public Coordonnees getNewCoordonnees(Coordonnees prec, int numSphere, float distPrec, float dist) {
         
         // On memorise les informations de chaque sphere
         if (this._coordMem.isEmpty()) this._sphere = numSphere;
@@ -114,7 +115,7 @@ public class Fonction {
      
             numSphere = this._sphere;
             if(distPrec < dist && this._coordSens.get(numSphere)) {
-                this._coordTest.put(numSphere, this._coordTest.get(numSphere)+1);
+                //this._coordTest.put(numSphere, (this._coordTest.get(numSphere)+1)%4);
                 this._coordSens.put(numSphere,false);
                 result = this._coordMem.get(numSphere);
             } else if(distPrec < dist && !this._coordSens.get(numSphere)) {
@@ -140,8 +141,8 @@ public class Fonction {
                         result.setX(this._coordMem.get(numSphere).getX());
                     } else if(result.getX() > 2) {
                         this._coordSens.put(numSphere,false);
-                        this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
-                    }
+                    } 
+                    this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     break;
 
                 // Travaille sur y
@@ -158,8 +159,8 @@ public class Fonction {
                         result.setY(this._coordMem.get(numSphere).getY());
                     } else if(result.getY() > 2) {
                         this._coordSens.put(numSphere,false);
-                        this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     }
+                    this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     break;
 
                 // Travaille sur z
@@ -176,8 +177,8 @@ public class Fonction {
                         result.setZ(this._coordMem.get(numSphere).getZ());
                     } else if(result.getZ() > 5) {
                         this._coordSens.put(numSphere,false);
-                        this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     }
+                    this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     break;
 
                 // Travaille sur r
@@ -194,14 +195,15 @@ public class Fonction {
                         result.setR(this._coordMem.get(numSphere).getR());
                     } else if(result.getR() > 5) {
                         this._coordSens.put(numSphere,false);
-                        this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     }
+                    this._coordTest.put(numSphere,this._coordTest.get(numSphere)+1);
                     break;
 
                 default:
-                    /*this._coordTest.put(numSphere,1);
+                    this._coordTest.put(numSphere,1);
                     this._coordSens.put(numSphere,false);
-                    this._pas = this._pas/2;*/
+                    this._pas = this._pas/0.999;
+                    // On passe a la sphere suivante
                     this._sphere = (this._sphere+1)%this._coordMem.size();
                     break;
 
@@ -211,7 +213,100 @@ public class Fonction {
         
         return result;
         
-    } // getNewCoordonnees(Coordonnees prec, float distPrec, float dist)
+    } // getNewCoordonnees(Coordonnees prec, float distPrec, float dist)*/
     
+    
+    /**
+     * Permet de recuperer les nouvelles coordonnees a tester pour la sphere
+     * @param prec coordonnees precedentes de la sphere
+     * @param numSphere numero de la sphere
+     * @param distPrec distance euclidienne precedente
+     * @param dist distance euclidienne actuelle
+     * @return les nouvelles coordonnees de la sphere
+     */
+    public Coordonnees getNewCoordonnees(Coordonnees prec, int numSphere, float distPrec, float dist) {
+        
+        Coordonnees result = prec;
+        // On memorise la premiere sphere
+        if (this._coordMem.isEmpty()) this._sphere = numSphere;
+        
+        // On memorise les informations de chaque sphere
+        if(!this._coordMem.containsKey(numSphere)) {
+            
+            this._coordMem.put(numSphere, prec);
+            this._coordTest.put(numSphere, 1); // Deplacement sur x
+            this._coordSens.put(numSphere, 1); // Sens positif
+            
+        }
+        
+        // Si c'est a la bonne sphere de bouger on effectue le depalcement
+        if(this._sphere == numSphere) {
+        
+            if(dist <= distPrec) {
+                
+                // Le resultat est meilleur que le precedent, on le memorise
+                this._coordMem.put(numSphere, prec);
+                
+            } else {
+                
+                // Le resultat est moins bon que le precedent
+                result = this._coordMem.get(numSphere);
+                int[] tab = {1,-1};
+                Random rand = new Random();
+                this._coordSens.put(numSphere, tab[rand.nextInt(2)]);
+                
+            }
+
+            switch(this._coordTest.get(numSphere)) {
+
+                case 1:
+                    // Deplacement sur x
+                    result.setX((float)((prec.getX() + this._pas)*this._coordSens.get(numSphere)));
+                    break;
+
+                case 2:
+                    // Deplacement sur y
+                    result.setY((float)((prec.getY() + this._pas)*this._coordSens.get(numSphere)));
+                    break;
+
+                case 3:
+                    // Deplacement sur z
+                    result.setZ((float)((prec.getZ() + this._pas)*this._coordSens.get(numSphere)));
+                    break;
+
+                case 4:
+                    // Deplacement sur r
+                    result.setR((float)((prec.getR() + this._pas)*this._coordSens.get(numSphere)));
+                    break;
+
+                default:
+                    // On passe a la sphere suivante
+                    this._coordTest.put(numSphere, 0);
+                    this._coordSens.put(numSphere, 1);
+                    this._sphere = (this._sphere+1)%this._coordMem.size();
+                    break;
+
+            }
+            // On incremente pour traiter une autre coordonnee a la prochaine iteration
+            this._coordTest.put(numSphere, this._coordTest.get(numSphere)+1);
+
+        }
+        
+        return result;
+        
+    } // getNewCoordonnees(Coordonnees prec, float distPrec, float dist)
+
+    
+    /***** GETTER/SETTER *****/
+    
+    
+    public double getPas() {
+        return _pas;
+    }
+
+    public void setPas(double _pas) {
+        this._pas = _pas;
+    }
+
     
 } // class Fonction
