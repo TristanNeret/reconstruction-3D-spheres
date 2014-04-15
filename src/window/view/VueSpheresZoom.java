@@ -20,10 +20,10 @@ import window.main.MainSphere;
 import window.main.Coordonnees;
 
 /**
- * VueSpheresHillClimbing
+ * VueSpheresZoom
  * @author Tristan
  */
-public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Observer {
+public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -40,7 +40,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
     //////////////////////////////////////////////////////////////////////////
     
     
-    public VueSpheresHillClimbing(MainSphere ms, float[][] zBufferTab, int width, int height, int nbSpheres) {
+    public VueSpheresZoom(MainSphere ms, float[][] zBufferTab, int width, int height, int nbSpheres) {
         
         this._ms = ms;
         this._pixels = zBufferTab;
@@ -53,7 +53,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
         // Dimension de la fenetre
         this.setPreferredSize(new Dimension(this._width, this._height));
         
-    } // VueSpheresHillClimbing(MainSphere ms, float[][] zBufferTab, int width, int height, int nbSpheres)
+    } // VueSpheresZoom(MainSphere ms, float[][] zBufferTab, int width, int height, int nbSpheres)
 
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -128,23 +128,23 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
                 // Des que la distance euclidienne est correct, on utilise un
                 // algorithme de Hill-Climbing pour ameliorer le resultat
                 Coordonnees c = this._translations.get(i);
-                if(this._distanceMem > 12) {
+                if(this._distanceMem > 999) {
                     
                     // Random
                     this._v_x = (((float)this._rand.nextInt(401)/100)-(float)2);
                     this._v_y = (((float)this._rand.nextInt(401)/100)-(float)2);
                     this._v_z = (((float)this._rand.nextInt(1001)/100)-(float)8);
                     
-                    c.setX(_v_x);
-                    c.setY(_v_y);
-                    c.setZ(_v_z);
+                    c.setX((float) 0.0);
+                    c.setY((float) 0.0);
+                    c.setZ((float) 3.0);
                     c.setR(1);
                     this._translations.set(i, c);
                     
                 } else {
                     
                     // Hill-Climbing
-                    c = this._fonction.getNewCoordonneesHC(this._translationsMem.get(i),i,this._distanceMem,this._distance);
+                    c = this._fonction.getNewCoordonneesZoom(this._translationsMem.get(i),i,this._distanceMem,this._distance);
                     this._translations.set(i, c);
                     
                 }
@@ -255,4 +255,4 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
     } // update(Observable o, Object arg)
     
     
-} // class VueSpheresHillClimbing
+} // class VueSpheresZoom

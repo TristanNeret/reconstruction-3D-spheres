@@ -19,6 +19,7 @@ import window.view.VueFinale;
 import window.view.VueInformations;
 import window.view.VueSpheres;
 import window.view.VueSpheresHillClimbing;
+import window.view.VueSpheresZoom;
 import window.view.VueZBuffer;
 
 /**
@@ -70,6 +71,7 @@ public class Fenetre extends JFrame {
         // Vue de la fentre 3D
         //vs = new VueSpheres(this._ms,newZbufferTab,this._width,this._height,this._nbSpheres);
         vs = new VueSpheresHillClimbing(this._ms,newZbufferTab,this._width,this._height,this._nbSpheres);
+        //vs = new VueSpheresZoom(this._ms,newZbufferTab,this._width,this._height,this._nbSpheres);
         this._ms.addObserver((Observer) vs);
         
         // Vue du meilleur resultat observe

@@ -217,14 +217,15 @@ public class Fonction {
     
     
     /**
-     * Permet de recuperer les nouvelles coordonnees a tester pour la sphere
+     * Permet de recuperer les nouvelles coordonnees a tester pour la sphere en
+     * suivant un algorithme de Hill-Climbing
      * @param prec coordonnees precedentes de la sphere
      * @param numSphere numero de la sphere
      * @param distPrec distance euclidienne precedente
      * @param dist distance euclidienne actuelle
      * @return les nouvelles coordonnees de la sphere
      */
-    public Coordonnees getNewCoordonnees(Coordonnees prec, int numSphere, float distPrec, float dist) {
+    public Coordonnees getNewCoordonneesHC(Coordonnees prec, int numSphere, float distPrec, float dist) {
         
         Coordonnees result = prec;
         // On memorise la premiere sphere
@@ -294,7 +295,54 @@ public class Fonction {
         
         return result;
         
-    } // getNewCoordonnees(Coordonnees prec, float distPrec, float dist)
+    } // getNewCoordonneesHC(Coordonnees prec, int numSphere, float distPrec, float dist)
+    
+    
+    /**
+     * Permet de recuperer les nouvelles coordonnees a tester pour la sphere 
+     * (On part d'une tres grosse sphere et on la diminue)
+     * @param prec coordonnees precedentes de la sphere
+     * @param numSphere numero de la sphere
+     * @param distPrec distance euclidienne precedente
+     * @param dist distance euclidienne actuelle
+     * @return les nouvelles coordonnees de la sphere
+     */
+    public Coordonnees getNewCoordonneesZoom(Coordonnees prec, int numSphere, float distPrec, float dist) {
+        
+        Coordonnees result = prec;
+        // On memorise la premiere sphere
+        if (this._coordMem.isEmpty()) this._sphere = numSphere;
+        
+        // On memorise les informations de chaque sphere
+        if(!this._coordMem.containsKey(numSphere)) {
+            
+            this._coordMem.put(numSphere, prec);
+            this._coordTest.put(numSphere, 1); 
+            this._coordSens.put(numSphere, 1); 
+            
+        }
+        
+        if(dist <= distPrec) {
+            
+            // Le resultat est meilleur que le precedent, on le memorise et on
+            // diminue la sphere
+            this._coordMem.put(numSphere, prec);
+            
+            // Deplacement sur z
+            result.setZ((float)(prec.getZ() - this._pas));
+            
+        } else {
+            
+            // Le resultat est moins bon que le precedent, on passe au 
+            // Hill-Climbing
+            result = this._coordMem.get(numSphere);
+            return this.getNewCoordonneesHC(prec, numSphere, distPrec, dist);
+            
+        }
+        
+        return result;
+        
+    } // getNewCoordonneesZoom(Coordonnees prec, int numSphere, float distPrec, float dist)
 
     
     /***** GETTER/SETTER *****/
