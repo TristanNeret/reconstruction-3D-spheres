@@ -33,6 +33,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
     
     protected MainSphere _ms;
     protected float _v_x, _v_y, _v_z;
+    protected float _seuil;
     
     
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -76,6 +77,9 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
         this._gl.glEnable(GL.GL_DEPTH_TEST);
         this._gl.glDepthFunc(GL.GL_LEQUAL);
         this._gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
+        
+        // Recuperation de la distance euclidienne pour une image vide
+        this._seuil = this._fonction.getDistanceEuclidienne(_pixels, new float[this._width][this._height]);
         
         this._translations = new ArrayList<>();
         // Creation des spheres
@@ -128,7 +132,7 @@ public class VueSpheresHillClimbing extends AbstractVueGLCanvas implements Obser
                 // Des que la distance euclidienne est correct, on utilise un
                 // algorithme de Hill-Climbing pour ameliorer le resultat
                 Coordonnees c = this._translations.get(i);
-                if(this._distanceMem > 12) {
+                if(this._distanceMem > this._seuil) {
                     
                     // Random
                     this._v_x = (((float)this._rand.nextInt(401)/100)-(float)2);

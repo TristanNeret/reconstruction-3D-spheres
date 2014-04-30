@@ -9,6 +9,7 @@ package sphere.algorithme;
 import java.util.HashMap;
 import java.util.Random;
 import window.main.Coordonnees;
+import window.main.MainSphere;
 
 /**
  * Fonction
@@ -323,21 +324,20 @@ public class Fonction {
         }
         
         if(dist <= distPrec) {
-            
+
             // Le resultat est meilleur que le precedent, on le memorise et on
             // diminue la sphere
             this._coordMem.put(numSphere, prec);
-            
             // Deplacement sur z
             result.setZ((float)(prec.getZ() - this._pas));
-            
+
         } else {
-            
+
             // Le resultat est moins bon que le precedent, on passe au 
             // Hill-Climbing
             result = this._coordMem.get(numSphere);
             return this.getNewCoordonneesHC(prec, numSphere, distPrec, dist);
-            
+
         }
         
         return result;
