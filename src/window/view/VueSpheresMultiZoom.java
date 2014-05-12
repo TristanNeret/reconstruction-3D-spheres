@@ -100,12 +100,12 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
             GLUquadric qobj1 = _glu.gluNewQuadric();
             this._gl.glPushMatrix();
             this._gl.glColor3f(1, 1, 1);
-            this._gl.glTranslatef(0.f, 0.f, 0.f);
+            this._gl.glTranslatef(0.f, 0.f, 2.f);
             _glu.gluSphere(qobj1, 1.f, 100, 100);
             this._gl.glPopMatrix();
             
             this._spheres.add(qobj1);
-            this._translations.add(new Coordonnees((float) 0, (float) 0, (float) 0, 0));
+            this._translations.add(new Coordonnees((float) 0, (float) 0, (float) 2, 1));
             
         }
         this._spheresMem = this._spheres;
@@ -147,7 +147,7 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
 
                     this._v_x = ((float) 0);
                     this._v_y = ((float) 0);
-                    this._v_z = ((float) 0);
+                    this._v_z = ((float) 2);
 
                     c.setX(_v_x);
                     c.setY(_v_y);
@@ -198,10 +198,6 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
                     this._translations.set(i, c);
                     dist = this.getZBufferTab(gLDrawable);
                     res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
-                    //if(this._translations.size() > 1) {
-                        System.out.println("RES: " + res1 + "|" + res2 + "|" + res3 + "(" + x + "|" + pasCourant + ")");
-                    //}
                     
                     if (res1 < res2 && res1 < res3) {
                         
@@ -398,7 +394,7 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
                     // S'il n'y a eu aucune amelioration, on diminue le pas
                     if(testPas) {
                         
-                        pasCourant = (float) (pasCourant /1.01);
+                        pasCourant = (float) (pasCourant/1.01);
                         
                         // Si le pas est trop petit on ajoute une sphere et on
                         // le reinitisalise
@@ -408,11 +404,11 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
                             this.ajouterSphere();
                             
                             // On met a jour la distance euclidienne par celle avec la nouvelle sphere
-                           /* dist = this.getZBufferTab(gLDrawable);
+                            /*dist = this.getZBufferTab(gLDrawable);
                             float res = this._fonction.getDistanceEuclidienne(this._pixels, dist);
                             this._distanceMem = res;
                             this._distance = res;*/
-                            System.out.println("______ NEW ______");
+                            System.out.println("______ NOUVELLE SPHERE ______");
                         }
                         
                     }
@@ -463,7 +459,7 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
     private void memo() {
         
         // Memorisation du meilleur resultat
-        //if (this._distance < this._distanceMem) {
+        if (this._distance < this._distanceMem) {
 
             // Pour l'effet crenaux
             if (this._distanceMem < Float.POSITIVE_INFINITY) {
@@ -485,7 +481,7 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
             System.out.println("Distance euclidienne: " + this._distance + " ("
                     + this._nbIterations + " iterations)");
 
-        /*} else if (this._nbIterations % 25 == 0) {
+        } else if (this._nbIterations % 25 == 0) {
 
             // Met a jour les infos toutes les 50 iterations meme s'il n'y a 
             // pas de meilleur score
@@ -494,7 +490,7 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
             // Mise a jour de la courbe
             this._ms.updateView(2);
 
-        }*/
+        }
             
     } // memo()
     
@@ -511,7 +507,7 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
         _glu.gluSphere(qobj1, 1.f, 100, 100);
         this._gl.glPopMatrix();
         this._spheres.add(qobj1);            
-        this._translations.add(new Coordonnees((float) 0, (float) 0, (float) 0, 0));
+        this._translations.add(new Coordonnees((float) 0, (float) 0, (float) 2, 1));
         
     } // ajouterSphere()
 

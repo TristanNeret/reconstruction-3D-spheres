@@ -221,7 +221,7 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
 	// Always check that our framebuffer is ok
 	if(gl.glCheckFramebufferStatus(GL2.GL_FRAMEBUFFER) != GL2.GL_FRAMEBUFFER_COMPLETE) {
             
-		System.err.println("Can not use FBO! Status error:" + status);
+            System.err.println("Can not use FBO! Status error:" + status);
                 
 	} 
     
