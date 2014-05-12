@@ -135,288 +135,285 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
             // On incremente le nombre d'iterations effectuees
             this._nbIterations++;
             
-            //for (int i = 0; i < this._spheres.size(); i++) {
             // On travaille uniquement sur la derniere sphere ajoutee
             int i = this._spheres.size()-1;
             
-                // Des que la distance euclidienne est correct, on utilise un
-                // algorithme de Hill-Climbing pour ameliorer le resultat
-                Coordonnees c = this._translations.get(i);
-                
-                if (!init) {
+            // Des que la distance euclidienne est correct, on utilise un
+            // algorithme de Hill-Climbing pour ameliorer le resultat
+            Coordonnees c = this._translations.get(i);
 
-                    this._v_x = ((float) 0);
-                    this._v_y = ((float) 0);
-                    this._v_z = ((float) 2);
+            if (!init) {
 
-                    c.setX(_v_x);
-                    c.setY(_v_y);
-                    c.setZ(_v_z);
-                    c.setR(1);
-                    this._translations.set(i, c);
-                    
-                    // Calcul initial de la distance euclidienne
-                    dist = this.getZBufferTab(gLDrawable);
-                    float res = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    this._distance = res;
-                    
-                    this._test = true;
-                    init = true;
-                    this.memo();
-                    
-                } else {
-                    
-                    // Hill-Climbing
-                    c = this._translations.get(i);
-                    float x = c.getX();
-                    float y = c.getY();
-                    float z = c.getZ();
-                    float r = c.getR();
-                    
-                    boolean testPas = true;
-                    
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    
-                    ////////// Test sur x
+                this._v_x = ((float) 0);
+                this._v_y = ((float) 0);
+                this._v_z = ((float) 2);
 
-                    // Sens positif (x)
+                c.setX(_v_x);
+                c.setY(_v_y);
+                c.setZ(_v_z);
+                c.setR(1);
+                this._translations.set(i, c);
+
+                // Calcul initial de la distance euclidienne
+                dist = this.getZBufferTab(gLDrawable);
+                float res = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+                this._distance = res;
+
+                this._test = true;
+                init = true;
+                this.memo();
+
+            } else {
+
+                // Hill-Climbing
+                c = this._translations.get(i);
+                float x = c.getX();
+                float y = c.getY();
+                float z = c.getZ();
+                float r = c.getR();
+
+                boolean testPas = true;
+
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+
+                ////////// Test sur x
+
+                // Sens positif (x)
+                c.setX(x + pasCourant);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);  
+                res1 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                // Sens negatif (x)
+                c.setX(x - pasCourant);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res2 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                // Position originale (x)
+                c.setX(x);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                if (res1 < res2 && res1 < res3) {
+
+                    // Le sens positif est le meilleur (x)
+                    this._distance = res1;
                     c.setX(x + pasCourant);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);  
-                    res1 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+                    this.memo();
+                    testPas = false;
 
-                    // Sens negatif (x)
+                } else if (res2 < res3) {
+
+                    // Le sens negatif est le meilleur (x)
+                    this._distance = res2;
                     c.setX(x - pasCourant);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res2 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
-                    // Position originale (x)
+                    this.memo();
+                    testPas = false;
+
+                } else {
+
+                    // Pas d'amelioration (x)
+                    this._distance = res3;
                     c.setX(x);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
-                    if (res1 < res2 && res1 < res3) {
-                        
-                        // Le sens positif est le meilleur (x)
-                        this._distance = res1;
-                        c.setX(x + pasCourant);
-                        this._translations.set(i, c);
-                        this.memo();
-                        testPas = false;
-           
-                    } else if (res2 < res3) {
-                        
-                        // Le sens negatif est le meilleur (x)
-                        this._distance = res2;
-                        c.setX(x - pasCourant);
-                        this._translations.set(i, c);
-                        this.memo();
-                        testPas = false;
-                        
-                    } else {
-                        
-                        // Pas d'amelioration (x)
-                        this._distance = res3;
-                        c.setX(x);
-                        this._translations.set(i, c);
-                        this.memo();
-                        
-                    }
-                    this._distanceMem = this._distance;
+                    this.memo();
 
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    
-                    ////////// Test sur y
+                }
+                //this._distanceMem = this._distance;
+                this.updateDistanceEuclidienne(this._distance);
 
-                    // Sens positif (y)
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+
+                ////////// Test sur y
+
+                // Sens positif (y)
+                c.setY(y + pasCourant);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res1 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                // Sens negatif (y)
+                c.setY(y - pasCourant);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res2 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                // Position originale (y)
+                c.setY(y);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                if (res1 < res2 && res1 < res3) {
+
+                    // Le sens positif est le meilleur (y)
+                    this._distance = res1;
                     c.setY(y + pasCourant);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res1 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+                    this.memo();
+                    testPas = false;
 
-                    // Sens negatif (y)
+                } else if (res2 < res3) {
+
+                    // Le sens negatif est le meilleur (y)
+                    this._distance = res2;
                     c.setY(y - pasCourant);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res2 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
-                    // Position originale (y)
+                    this.memo();
+                    testPas = false;
+
+                } else {
+
+                    // Pas d'amelioration (y)
+                    this._distance = res3;
                     c.setY(y);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
-                    if (res1 < res2 && res1 < res3) {
-                        
-                        // Le sens positif est le meilleur (y)
-                        this._distance = res1;
-                        c.setY(y + pasCourant);
-                        this._translations.set(i, c);
-                        this.memo();
-                        testPas = false;
-               
-                    } else if (res2 < res3) {
-                        
-                        // Le sens negatif est le meilleur (y)
-                        this._distance = res2;
-                        c.setY(y - pasCourant);
-                        this._translations.set(i, c);
-                        this.memo();
-                        testPas = false;
-                       
-                    } else {
-                        
-                        // Pas d'amelioration (y)
-                        this._distance = res3;
-                        c.setY(y);
-                        this._translations.set(i, c);
-                        this.memo();
-                        
-                    }
-                    this._distanceMem = this._distance;
+                    this.memo();
 
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    
-                    ////////// Test sur z
+                }
+                //this._distanceMem = this._distance;
+                this.updateDistanceEuclidienne(this._distance);
 
-                    // Sens positif (z)
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+
+                ////////// Test sur z
+
+                // Sens positif (z)
+                c.setZ(z + pasCourant);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res1 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                // Sens negatif (z)
+                c.setZ(z - pasCourant);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res2 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                // Position originale (z)
+                c.setZ(z);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                if (res1 < res2 && res1 < res3) {
+
+                    // Le sens positif est le meilleur (z)
+                    this._distance = res1;
                     c.setZ(z + pasCourant);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res1 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+                    this.memo();
+                    testPas = false;
 
-                    // Sens negatif (z)
+                } else if (res2 < res3) {
+
+                    // Le sens negatif est le meilleur (z)
+                    this._distance = res2;
                     c.setZ(z - pasCourant);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res2 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
-                    // Position originale (z)
+                    this.memo();
+                    testPas = false;
+
+                } else {
+
+                    // Pas d'amelioration (z)
+                    this._distance = res3;
                     c.setZ(z);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
-                    if (res1 < res2 && res1 < res3) {
-                        
-                        // Le sens positif est le meilleur (z)
-                        this._distance = res1;
-                        c.setZ(z + pasCourant);
-                        this._translations.set(i, c);
-                        this.memo();
-                        testPas = false;
-         
-                    } else if (res2 < res3) {
-                        
-                        // Le sens negatif est le meilleur (z)
-                        this._distance = res2;
-                        c.setZ(z - pasCourant);
-                        this._translations.set(i, c);
-                        this.memo();
-                        testPas = false;
-                        
-                    } else {
-                        
-                        // Pas d'amelioration (z)
-                        this._distance = res3;
-                        c.setZ(z);
-                        this._translations.set(i, c);
-                        this.memo();
-                        
-                    }
-                    this._distanceMem = this._distance;
-                    
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    
-                    ////////// Test sur r
+                    this.memo();
 
-                    // Sens positif (r)
+                }
+                //this._distanceMem = this._distance;
+                this.updateDistanceEuclidienne(this._distance);
+
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+
+                ////////// Test sur r
+
+                // Sens positif (r)
+                c.setR(r + pasCourant);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res1 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                // Sens negatif (r)
+                c.setR(r - pasCourant);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res2 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                // Pas d'amelioration (r)
+                c.setR(r);
+                this._translations.set(i, c);
+                dist = this.getZBufferTab(gLDrawable);
+                res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+
+                if (res1 < res2 && res1 < res3) {
+
+                    // Le sens positif est le meilleur (r)
+                    this._distance = res1;
                     c.setR(r + pasCourant);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res1 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
+                    this.memo();
+                    testPas = false;
 
-                    // Sens negatif (r)
+                } else if (res2 < res3) {
+
+                    // Le sens negatif est le meilleur (r)
+                    this._distance = res2;
                     c.setR(r - pasCourant);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res2 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
+                    this.memo();
+                    testPas = false;
+
+                } else {
+
                     // Pas d'amelioration (r)
+                    this._distance = res3;
                     c.setR(r);
                     this._translations.set(i, c);
-                    dist = this.getZBufferTab(gLDrawable);
-                    res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                    
-                    if (res1 < res2 && res1 < res3) {
-                        
-                        // Le sens positif est le meilleur (r)
-                        this._distance = res1;
-                        c.setR(r + pasCourant);
-                        this._translations.set(i, c);
-                        this.memo();
-                        testPas = false;
-                     
-                    } else if (res2 < res3) {
-                        
-                        // Le sens negatif est le meilleur (r)
-                        this._distance = res2;
-                        c.setR(r - pasCourant);
-                        this._translations.set(i, c);
-                        this.memo();
-                        testPas = false;
-                    
-                    } else {
-                        
-                        // Pas d'amelioration (r)
-                        this._distance = res3;
-                        c.setR(r);
-                        this._translations.set(i, c);
-                        this.memo();
-                        
-                    }
-                    this._distanceMem = this._distance;
+                    this.memo();
 
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                    ///////////////////////////////////////////////////////////
-                   
-                    // S'il n'y a eu aucune amelioration, on diminue le pas
-                    if(testPas) {
-                        
-                        pasCourant = (float) (pasCourant/1.01);
-                        
-                        // Si le pas est trop petit on ajoute une sphere et on
-                        // le reinitisalise
-                        if(pasCourant < pasOriginal/1.8) {
-                        
-                            pasCourant = pasOriginal;
-                            this.ajouterSphere();
-                            
-                            // On met a jour la distance euclidienne par celle avec la nouvelle sphere
-                            /*dist = this.getZBufferTab(gLDrawable);
-                            float res = this._fonction.getDistanceEuclidienne(this._pixels, dist);
-                            this._distanceMem = res;
-                            this._distance = res;*/
-                            System.out.println("______ NOUVELLE SPHERE ______");
-                        }
-                        
-                    }
-                    
-                    this._test = true;
-                    
-                //} 
+                }
+                //this._distanceMem = this._distance;
+                this.updateDistanceEuclidienne(this._distance);
 
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////
+
+                // S'il n'y a eu aucune amelioration, on diminue le pas
+                if(testPas) {
+
+                    pasCourant = (float) (pasCourant/1.01);
+
+                    // Si le pas est trop petit on ajoute une sphere et on
+                    // le reinitisalise
+                    if(pasCourant < pasOriginal/10) {
+
+                        pasCourant = pasOriginal;
+                        this.ajouterSphere();
+
+                        // On met a jour la distance euclidienne par celle avec la nouvelle sphere
+                        System.out.println("______ NOUVELLE SPHERE ______");
+                    }
+
+                }
+
+                this._test = true;
+    
             }
             
         } else {
@@ -510,6 +507,21 @@ public class VueSpheresMultiZoom extends AbstractVueGLCanvas implements Observer
         this._translations.add(new Coordonnees((float) 0, (float) 0, (float) 2, 1));
         
     } // ajouterSphere()
+    
+    
+    /**
+     * Permet de mettre a jour la meilleure distance euclidienne
+     * @param d nouvelle distance a tester
+     */
+    public void updateDistanceEuclidienne(float d) {
+        
+        if(d < this._distanceMem) {
+            
+            this._distanceMem = d;
+            
+        }
+        
+    } // updateDistanceEuclidienne(float d)
 
     
     /**

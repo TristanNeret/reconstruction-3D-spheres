@@ -24,9 +24,11 @@ public class Sphere {
      */
     public static void main(String[] args) {
         
+        String nomFichier = "zbuffer_test";
+        
         // Permet de creer une image de profondeur et de recuperer le tableau
         // de z-buffer
-        Creation scene = new Creation("zbuffer_sphere",0,200,200);
+        Creation scene = new Creation(nomFichier,0,200,200);
         // Attend que scene soit dessinee pour recuperer les donnees z-buffer
         try {
             Thread.sleep(1000);
@@ -38,12 +40,13 @@ public class Sphere {
         
         // Permet de recuperer le tableau de pixels d'une image de profondeur a
         // partir d'un fichier texte
-        Lecture zbuffer = new Lecture("zbuffer_sphere.txt");
+        Lecture zbuffer = new Lecture(nomFichier + ".txt");
         float[] pixels = zbuffer.lireTexte();
         
         // Affichage de la fenetre
-        Fenetre app = new Fenetre("zbuffer_sphere.png", pixels);
+        Fenetre app = new Fenetre(nomFichier + ".png", pixels);
         
     }    
+    
     
 } // class Sphere
