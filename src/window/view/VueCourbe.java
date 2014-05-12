@@ -6,7 +6,6 @@
 
 package window.view;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -110,8 +109,8 @@ public class VueCourbe extends JFrame implements Observer {
         }
 
         DefaultXYDataset dataset = new DefaultXYDataset();
-        dataset.addSeries("Distance euclidienne", yValues);
-        dataset.addSeries("Nombre d'itérations", xValues);
+        dataset.addSeries("Dist. euclidienne", yValues);
+        dataset.addSeries("Nb itérations", xValues);
         
         return dataset;
         

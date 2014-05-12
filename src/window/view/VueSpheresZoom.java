@@ -171,6 +171,8 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                     float z = c.getZ();
                     float r = c.getR();
                     
+                    boolean testPas = true;
+                    
                     ///////////////////////////////////////////////////////////
                     ///////////////////////////////////////////////////////////
                     ///////////////////////////////////////////////////////////
@@ -195,8 +197,6 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                     dist = this.getZBufferTab(gLDrawable);
                     res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
                     
-                    //System.out.println("X: " + res1 + "|" + res2 + "|" + res3);
-
                     if (res1 < res2 && res1 < res3) {
                         
                         // Le sens positif est le meilleur (x)
@@ -204,6 +204,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         c.setX(x + pas);
                         this._translations.set(i, c);
                         this.memo();
+                        testPas = false;
            
                     } else if (res2 < res3) {
                         
@@ -212,6 +213,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         c.setX(x - pas);
                         this._translations.set(i, c);
                         this.memo();
+                        testPas = false;
                         
                     } else {
                         
@@ -222,6 +224,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         this.memo();
                         
                     }
+                    this._distanceMem = this._distance;
 
                     ///////////////////////////////////////////////////////////
                     ///////////////////////////////////////////////////////////
@@ -256,6 +259,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         c.setY(y + pas);
                         this._translations.set(i, c);
                         this.memo();
+                        testPas = false;
                
                     } else if (res2 < res3) {
                         
@@ -264,7 +268,8 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         c.setY(y - pas);
                         this._translations.set(i, c);
                         this.memo();
-                       
+                        testPas = false;
+                        
                     } else {
                         
                         // Pas d'amelioration (y)
@@ -274,6 +279,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         this.memo();
                         
                     }
+                    this._distanceMem = this._distance;
 
                     ///////////////////////////////////////////////////////////
                     ///////////////////////////////////////////////////////////
@@ -299,8 +305,6 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                     dist = this.getZBufferTab(gLDrawable);
                     res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
                     
-                    //System.out.println("Z: " + res1 + "|" + res2 + "|" + res3);
-
                     if (res1 < res2 && res1 < res3) {
                         
                         // Le sens positif est le meilleur (z)
@@ -308,6 +312,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         c.setZ(z + pas);
                         this._translations.set(i, c);
                         this.memo();
+                        testPas = false;
          
                     } else if (res2 < res3) {
                         
@@ -316,6 +321,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         c.setZ(z - pas);
                         this._translations.set(i, c);
                         this.memo();
+                        testPas = false;
                         
                     } else {
                         
@@ -326,6 +332,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         this.memo();
                         
                     }
+                    this._distanceMem = this._distance;
                     
                     ///////////////////////////////////////////////////////////
                     ///////////////////////////////////////////////////////////
@@ -351,8 +358,6 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                     dist = this.getZBufferTab(gLDrawable);
                     res3 = this._fonction.getDistanceEuclidienne(this._pixels, dist);
                     
-                    //System.out.println("R: " + res1 + "|" + res2 + "|" + res3);
-
                     if (res1 < res2 && res1 < res3) {
                         
                         // Le sens positif est le meilleur (r)
@@ -360,6 +365,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         c.setR(r + pas);
                         this._translations.set(i, c);
                         this.memo();
+                        testPas = false;
                      
                     } else if (res2 < res3) {
                         
@@ -368,6 +374,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         c.setR(r - pas);
                         this._translations.set(i, c);
                         this.memo();
+                        testPas = false;
                     
                     } else {
                         
@@ -378,13 +385,18 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
                         this.memo();
                         
                     }
+                    this._distanceMem = this._distance;
 
                     ///////////////////////////////////////////////////////////
                     ///////////////////////////////////////////////////////////
                     ///////////////////////////////////////////////////////////
                     
                     this._test = true;
-                    pas = (float) (pas /1.01);
+                    
+                    // S'il n'y a eu aucune amelioration, on diminue le pas
+                    if(testPas) {
+                        pas = (float) (pas /1.01);
+                    }
                     
                 } 
 
@@ -431,7 +443,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
         
         // Met a jour les infos toutes les 50 iterations meme s'il n'y a 
         // pas de meilleur score
-        /*if (this._nbIterations % 50 == 0) {
+        /*else if (this._nbIterations % 50 == 0) {
 
             this._ms.updateInformations(this._distanceMem + "", this._nbIterations + "");
             this._nbIterationsMem = this._nbIterations;
@@ -441,7 +453,7 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
         }*/
 
         // Memorisation du meilleur resultat
-        if (this._distance <= this._distanceMem) {
+        if (this._distance < this._distanceMem) {
 
             // Pour l'effet crenaux
             if (this._distanceMem < Float.POSITIVE_INFINITY) {
@@ -462,6 +474,15 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
 
             System.out.println("Distance euclidienne: " + this._distance + " ("
                     + this._nbIterations + " iterations)");
+
+        } else if (this._nbIterations % 25 == 0) {
+
+            // Met a jour les infos toutes les 50 iterations meme s'il n'y a 
+            // pas de meilleur score
+            this._ms.updateInformations(this._distanceMem + "", this._nbIterations + "");
+            this._nbIterationsMem = this._nbIterations;
+            // Mise a jour de la courbe
+            this._ms.updateView(2);
 
         }
             
@@ -499,4 +520,4 @@ public class VueSpheresZoom extends AbstractVueGLCanvas implements Observer {
     } // update(Observable o, Object arg)
     
 
-} // class VueSpheresHillClimbing
+} // class VueSpheresZoom

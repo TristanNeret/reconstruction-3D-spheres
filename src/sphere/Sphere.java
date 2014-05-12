@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import sphere.zbuffer.Creation;
 import sphere.zbuffer.Lecture;
 import window.Fenetre;
-import window.view.AbstractVueGLCanvas;
 
 /**
  * Sphere

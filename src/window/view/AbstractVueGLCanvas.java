@@ -416,4 +416,5 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
         
     } // saveCreationZBuffer(GLAutoDrawable gLDrawable, String nomFichier)  
     
+    
 } // AbstractVueGLCanvas
