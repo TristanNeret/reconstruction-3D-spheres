@@ -76,8 +76,8 @@ public class Fonction {
         float distance, dTmp;
         distance = 0;
         
-        for(int i=0;i<width;i+=1) {
-            for(int j=0;j<height;j+=1) {
+        for(int i=0;i<width;i+=2) {
+            for(int j=0;j<height;j+=2) {
                 
                 //dTmp = (float) Math.sqrt(Math.pow(pixels1[i][j], 2)+Math.pow(pixels2[i][j], 2));
                 //dTmp = Math.abs(pixels1[i][j]-pixels2[i][j]);

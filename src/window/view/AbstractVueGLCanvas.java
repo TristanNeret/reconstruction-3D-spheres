@@ -250,8 +250,8 @@ public abstract class AbstractVueGLCanvas extends GLCanvas implements GLEventLis
         
         // Recuperation du tableau de z-buffer
         float[][] res = new float[_width][_height];
-        for (int x=0; x<_width/1; x++) {
-            for (int y=0; y<_height/1; y++) {
+        for (int x=0; x<_width/1; x+=2) {
+            for (int y=0; y<_height/1; y+=2) {
                 
                 res[x][y] = this._pixelsBis.get(x+y*this._width);
                 

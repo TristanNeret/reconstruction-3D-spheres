@@ -128,8 +128,8 @@ public class VueCourbe extends JFrame implements Observer {
       // Create the chart
       JFreeChart chart = ChartFactory.createXYLineChart(
          title,                    // The chart title
-         "Nombre d'itérations",    // x axis label
-         "Distance euclidienne",   // y axis label
+         "Nb itérations",          // x axis label
+         "Dist. euclidienne",      // y axis label
          dataset,                  // The dataset for the chart
          PlotOrientation.VERTICAL,
          false,                    // Is a legend required?

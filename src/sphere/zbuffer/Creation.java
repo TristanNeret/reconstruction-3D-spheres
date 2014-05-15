@@ -151,9 +151,9 @@ public final class Creation extends AbstractVueGLCanvas implements GLEventListen
         this._gl.glPushMatrix();
         this._gl.glColor3f(1, 1, 1);
         this._gl.glBegin(GL.GL_TRIANGLE_FAN);
-        this._gl.glVertex3f(-1, -1, 0);
-        this._gl.glVertex3f(1, -1, -1);
-        this._gl.glVertex3f(0, 1, 0);*/
+        this._gl.glVertex3f(-2, -2, 0);
+        this._gl.glVertex3f(2, -2, -2);
+        this._gl.glVertex3f(0, 2, 0);*/
         
         // Draw cube
         this._gl.glBegin(GL2.GL_QUADS);
